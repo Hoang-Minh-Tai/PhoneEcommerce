@@ -28,9 +28,9 @@ public class Category {
 	@Column(name = "name", unique = true, nullable = false)
 	private String name;
 
-	/** The picture. */
-	@Column(name = "picture")
-	private String picture;
+	/** The description. */
+	@Column(name = "description")
+	private String description;
 
 	/** The products. */
 	@OneToMany(mappedBy = "category")
@@ -47,13 +47,13 @@ public class Category {
 	 *
 	 * @param id       the id
 	 * @param name     the name
-	 * @param picture  the picture
+	 * @param description  the description
 	 * @param children the children
 	 */
-	public Category(Long id, String name, String picture, List<Category> children) {
+	public Category(Long id, String name, String description, List<Category> children) {
 		this.id = id;
 		this.name = name;
-		this.picture = picture;
+		this.description = description;
 	}
 
 	/**
@@ -93,20 +93,20 @@ public class Category {
 	}
 
 	/**
-	 * Gets the picture.
+	 * Gets the description.
 	 *
-	 * @return the picture
+	 * @return the description
 	 */
-	public String getPicture() {
-		return picture;
+	public String getDescription() {
+		return description;
 	}
 
 	/**
-	 * Sets the picture.
+	 * Sets the description.
 	 *
-	 * @param picture the new picture
+	 * @param description the new description
 	 */
-	public void setPicture(String picture) {
-		this.picture = picture;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }
