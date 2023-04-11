@@ -1,107 +1,134 @@
 package com.springbootecommerce.controller;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
+import com.springbootecommerce.dto.AddCartItemDto;
+import com.springbootecommerce.dto.UpdateCartItemDto;
 import com.springbootecommerce.model.Product;
-import com.springbootecommerce.model.ShoppingCart;
 import com.springbootecommerce.model.ShoppingCartItem;
+import com.springbootecommerce.model.User;
 import com.springbootecommerce.repository.ProductRepository;
 import com.springbootecommerce.repository.ShoppingCartItemRepository;
-import com.springbootecommerce.repository.ShoppingCartRepository;
+import com.springbootecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/shoppingcarts")
+@RequestMapping("/api/cart")
 @CrossOrigin("*")
 public class ShoppingCartController {
-
-    @Autowired
-    private ShoppingCartRepository shoppingCartRepository;
-
     @Autowired
     private ShoppingCartItemRepository cartItemRepository;
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    @GetMapping("/{id}")
-    public ShoppingCart getShoppingCartById(@PathVariable long id) {
-        return shoppingCartRepository.findById(id).orElse(null);
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> getShoppingCartById(@PathVariable long id, Authentication authentication) {
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+        Optional<ShoppingCartItem> optionalCartItem = cartItemRepository.findById(id);
+
+        if (optionalCartItem.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart item not found.");
+        }
+        ShoppingCartItem item = optionalCartItem.get();
+
+        // check if the cart item belongs to the user
+        if (!item.getUser().getUsername().equals(username)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied.");
+        }
+        return ResponseEntity.ok().body(item);
     }
 
-    @PostMapping("/{id}/items")
-    public ShoppingCartItem addCartItem(@PathVariable long id, @RequestBody ShoppingCartItem cartItem) {
-        ShoppingCart shoppingCart = shoppingCartRepository.findById(id).orElse(null);
-
-        if (shoppingCart == null) {
-            throw new RuntimeException("Shopping cart with id " + id + " not found.");
+    @PostMapping("/add")
+    public ResponseEntity<?> addCartItem(@RequestBody AddCartItemDto addCartItemDto, Authentication authentication) {
+        // get the authenticated user
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+        // call the product service to find the product
+        Optional<Product> product = productRepository.findById(addCartItemDto.getProductId());
+        if (product.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart item not found.");
         }
 
-        Product product = productRepository.findById(cartItem.getProduct().getId()).orElse(null);
+        ShoppingCartItem item = new ShoppingCartItem();
+        item.setUser(user);
+        item.setProduct(product.get());
+        item.setQuantity(addCartItemDto.getQuantity());
+        item.setCreatedAt(new Date());
 
-        if (product == null) {
-            throw new RuntimeException("Product with id " + cartItem.getProduct().getId() + " not found.");
-        }
-
-        cartItem.setProduct(product);
-        cartItem.setShoppingCart(shoppingCart);
-
-        cartItemRepository.save(cartItem);
-
-        return cartItem;
+        cartItemRepository.save(item);
+        // return the created item with a 201 status code
+        return ResponseEntity.status(HttpStatus.CREATED).body(item);
     }
 
-    @DeleteMapping("/items/{id}")
-    public void deleteCartItem(@PathVariable long id) {
-        cartItemRepository.deleteById(id);
-    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteCartItem(@PathVariable Long id, Authentication authentication) {
+        // get the authenticated user
+        String username = authentication.getName();
 
-    @PutMapping("/items/{id}")
-    public ShoppingCartItem updateCartItem(@PathVariable long id, @RequestBody ShoppingCartItem cartItem) {
-        ShoppingCartItem existingCartItem = cartItemRepository.findById(id).orElse(null);
-
-        if (existingCartItem == null) {
-            throw new RuntimeException("Cart item with id " + id + " not found.");
+        // check if the cart item exists
+        Optional<ShoppingCartItem> optionalCartItem = cartItemRepository.findById(id);
+        if (optionalCartItem.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart item not found.");
         }
 
-        Product product = productRepository.findById(cartItem.getProduct().getId()).orElse(null);
+        ShoppingCartItem item = optionalCartItem.get();
 
-        if (product == null) {
-            throw new RuntimeException("Product with id " + cartItem.getProduct().getId() + " not found.");
+        // check if the cart item belongs to the user
+        if (!item.getUser().getUsername().equals(username)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied.");
         }
 
-        existingCartItem.setProduct(product);
-        existingCartItem.setQuantity(cartItem.getQuantity());
+        // delete the cart item
+        cartItemRepository.delete(item);
 
-        cartItemRepository.save(existingCartItem);
-
-        return existingCartItem;
+        // return 204 No Content
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Cart item deleted successfully.");
     }
 
-    @GetMapping("/{id}/items")
-    public List<ShoppingCartItem> getCartItemsByShoppingCartId(@PathVariable long id) {
-        return cartItemRepository.findByShoppingCartId(id);
-    }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateCartItem(@PathVariable Long id,
+                                            @RequestBody UpdateCartItemDto updateCartItemDto, Authentication authentication) {
 
-    @GetMapping("/{id}/total")
-    public double calculateTotal(@PathVariable long id) {
-        List<ShoppingCartItem> cartItems = cartItemRepository.findByShoppingCartId(id);
-        double total = 0;
+        // get the authenticated user
+        String username = authentication.getName();
 
-        for (ShoppingCartItem cartItem : cartItems) {
-            total += cartItem.getProduct().getPrice().doubleValue() * cartItem.getQuantity();
+        // check if the cart item exists
+        Optional<ShoppingCartItem> optionalCartItem = cartItemRepository.findById(id);
+        if (optionalCartItem.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart item not found.");
         }
 
-        return total;
+        ShoppingCartItem item = optionalCartItem.get();
+
+        // check if the cart item belongs to the user
+        if (!item.getUser().getUsername().equals(username)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied.");
+        }
+
+        // update the cart item
+        item.setQuantity(updateCartItemDto.getQuantity());
+        cartItemRepository.save(item);
+
+        // return the updated cart item
+        return ResponseEntity.ok(item);
     }
 
-    @DeleteMapping("/{id}/items")
-    public void clearCart(@PathVariable long id) {
-        List<ShoppingCartItem> cartItems = cartItemRepository.findByShoppingCartId(id);
 
-        for (ShoppingCartItem cartItem : cartItems) {
-            cartItemRepository.delete(cartItem);
-        }
+    @GetMapping()
+    public List<ShoppingCartItem> getUserCart(Authentication authentication) {
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+        List<ShoppingCartItem> cartItems = cartItemRepository.findByUser(user);
+        return cartItems;
     }
 }

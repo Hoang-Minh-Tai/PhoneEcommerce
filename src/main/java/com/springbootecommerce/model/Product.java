@@ -29,9 +29,6 @@ public class Product {
 	@Column(name = "memory_version")
 	private String memoryVersion;
 
-	@Column(name = "discount")
-	private BigDecimal discount;
-
 	@Column(name = "in_stock")
 	private boolean inStock;
 
@@ -43,14 +40,13 @@ public class Product {
 		// Default constructor for JPA
 	}
 
-	public Product(String brand, String model, String description, String imageUrl, BigDecimal price, String memoryVersion, BigDecimal discount, boolean inStock, Category category) {
+	public Product(String brand, String model, String description, String imageUrl, BigDecimal price, String memoryVersion,  boolean inStock, Category category) {
 		this.brand = brand;
 		this.model = model;
 		this.description = description;
 		this.imageUrl = imageUrl;
 		this.price = price;
 		this.memoryVersion = memoryVersion;
-		this.discount = discount;
 		this.inStock = inStock;
 		this.category = category;
 	}
@@ -111,14 +107,6 @@ public class Product {
 
 	public void setMemoryVersion(String memoryVersion) {
 		this.memoryVersion = memoryVersion;
-	}
-
-	public BigDecimal getDiscount() {
-		return discount;
-	}
-
-	public void setDiscount(BigDecimal discount) {
-		this.discount = discount;
 	}
 
 	public boolean isInStock() {

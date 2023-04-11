@@ -56,7 +56,6 @@ public class ProductController {
 					productRequest.getImageUrl(),
 					productRequest.getPrice(),
 					productRequest.getMemoryVersion(),
-					productRequest.getDiscount(),
 					productRequest.isInStock(),
 					category
 			);
@@ -109,10 +108,6 @@ public class ProductController {
 
 		if (productDetails.getMemoryVersion() != null) {
 			product.get().setMemoryVersion(productDetails.getMemoryVersion());
-		}
-
-		if (productDetails.getDiscount() != null) {
-			product.get().setDiscount(productDetails.getDiscount());
 		}
 
 		if (productDetails.isInStock() != false) {
