@@ -1,4 +1,4 @@
-package com.springbootecommerce.resource;
+package com.springbootecommerce.controller;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import com.springbootecommerce.repository.OrderRepository;
 @RestController
 @RequestMapping("/api/orders")
 @CrossOrigin("*")
-public class OrderResource {
+public class OrderController {
 
     @Autowired
     private OrderRepository orderRepository;

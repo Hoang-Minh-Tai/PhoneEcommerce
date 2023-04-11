@@ -1,4 +1,4 @@
-package com.springbootecommerce.resource;
+package com.springbootecommerce.controller;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/shoppingcarts")
 @CrossOrigin("*")
-public class ShoppingCartResource {
+public class ShoppingCartController {
 
     @Autowired
     private ShoppingCartRepository shoppingCartRepository;

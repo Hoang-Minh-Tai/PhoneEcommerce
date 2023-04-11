@@ -1,15 +1,14 @@
 package com.springbootecommerce.model;
 
+import com.springbootecommerce.enums.Gender;
+import com.springbootecommerce.enums.Role;
+import com.springbootecommerce.enums.UserStatus;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "user")
 public class User {
-
-	public enum Gender {
-		MALE,
-		FEMALE
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,17 +33,19 @@ public class User {
 	@Column(name = "shipping_address")
 	private String shippingAddress;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "role")
-	private String role;
+	private Role role;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "status")
-	private String status;
+	private UserStatus status;
 
 	public User() {
 		// Default constructor for JPA
 	}
 
-	public User(String username, String password, String phoneNumber, String email, Gender gender, String shippingAddress, String role, String status) {
+	public User(String username, String password, String phoneNumber, String email, Gender gender, String shippingAddress, Role role, UserStatus status) {
 		this.username = username;
 		this.password = password;
 		this.phoneNumber = phoneNumber;
@@ -114,19 +115,19 @@ public class User {
 		this.shippingAddress = shippingAddress;
 	}
 
-	public String getRole() {
+	public Role getRole() {
 		return role;
 	}
 
-	public void setRole(String role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
 
-	public String getStatus() {
+	public UserStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(UserStatus status) {
 		this.status = status;
 	}
 }

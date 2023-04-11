@@ -1,6 +1,7 @@
-package com.springbootecommerce.resource;
+package com.springbootecommerce.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.springbootecommerce.dto.CreateProductDto;
 import com.springbootecommerce.repository.CategoryRepository;
@@ -24,7 +25,7 @@ import com.springbootecommerce.repository.ProductRepository;
 @RestController
 @RequestMapping("/api/products")
 @CrossOrigin("*")
-public class ProductResource {
+public class ProductController {
 
 	@Autowired
 	private ProductRepository productRepository;
@@ -77,17 +78,52 @@ public class ProductResource {
 	}
 
 	@PutMapping("/update/{id}")
-	public List<Product> updateProduct(@PathVariable long id, @RequestBody Product product) {
-		if (productRepository.existsById(id)) {
-			product.setId(id);
-			productRepository.save(product);
+	public ResponseEntity<Product> updateProduct(@PathVariable(value = "id") Long productId,
+												 @RequestBody Product productDetails) {
+
+		Optional<Product> product = productRepository.findById(productId);
+
+		if (!product.isPresent()) {
+			return ResponseEntity.notFound().build();
 		}
 
-		return productRepository.findAll();
-	}
+		if (productDetails.getBrand() != null) {
+			product.get().setBrand(productDetails.getBrand());
+		}
 
-	@GetMapping("/test/hello")
-	public String test() {
-		return "Hello";
+		if (productDetails.getModel() != null) {
+			product.get().setModel(productDetails.getModel());
+		}
+
+		if (productDetails.getDescription() != null) {
+			product.get().setDescription(productDetails.getDescription());
+		}
+
+		if (productDetails.getImageUrl() != null) {
+			product.get().setImageUrl(productDetails.getImageUrl());
+		}
+
+		if (productDetails.getPrice() != null) {
+			product.get().setPrice(productDetails.getPrice());
+		}
+
+		if (productDetails.getMemoryVersion() != null) {
+			product.get().setMemoryVersion(productDetails.getMemoryVersion());
+		}
+
+		if (productDetails.getDiscount() != null) {
+			product.get().setDiscount(productDetails.getDiscount());
+		}
+
+		if (productDetails.isInStock() != false) {
+			product.get().setInStock(productDetails.isInStock());
+		}
+
+		if (productDetails.getCategory() != null) {
+			product.get().setCategory(productDetails.getCategory());
+		}
+
+		Product updatedProduct = productRepository.save(product.get());
+		return ResponseEntity.ok(updatedProduct);
 	}
 }

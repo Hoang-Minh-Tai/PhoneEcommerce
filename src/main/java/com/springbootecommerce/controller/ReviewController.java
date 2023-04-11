@@ -1,4 +1,4 @@
-package com.springbootecommerce.resource;
+package com.springbootecommerce.controller;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import com.springbootecommerce.repository.ReviewRepository;
 @RestController
 @RequestMapping("/api/reviews")
 @CrossOrigin("*")
-public class ReviewResource {
+public class ReviewController {
 
     @Autowired
     private ReviewRepository reviewRepository;

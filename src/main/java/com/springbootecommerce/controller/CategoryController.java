@@ -1,4 +1,4 @@
-package com.springbootecommerce.resource;
+package com.springbootecommerce.controller;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import com.springbootecommerce.repository.CategoryRepository;
 @RestController
 @RequestMapping("/api/categories")
 @CrossOrigin("*")
-public class CategoryResource {
+public class CategoryController {
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -28,11 +28,6 @@ public class CategoryResource {
     @GetMapping("/all")
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
-    }
-
-    @GetMapping("/test/hello")
-    public String test() {
-        return "Hello";
     }
 
     @GetMapping("/get")
