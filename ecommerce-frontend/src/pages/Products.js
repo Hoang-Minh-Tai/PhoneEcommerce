@@ -29,7 +29,7 @@ export default function Products() {
 
   const views =
     products.length > 0 ? (
-      currentProducts.map(product => <Product product={product} />)
+      currentProducts.map((product) => <Product product={product} />)
     ) : (
       <Card>
         <Card.Content>
@@ -38,7 +38,7 @@ export default function Products() {
       </Card>
     );
 
-  const paginate = pageNumber => setCurrentPage(pageNumber);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const pagination =
     products.length > cardsPerPage ? (
@@ -49,7 +49,7 @@ export default function Products() {
       />
     ) : null;
 
-  const add = user ? user.admin ? <AddProductForm /> : null : null;
+  const add = user ? user.role == "ADMIN" ? <AddProductForm /> : null : null;
 
   return (
     <div>

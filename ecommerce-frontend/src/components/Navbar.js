@@ -1,25 +1,26 @@
 import React, { useContext, useState } from "react";
-
 import { Menu } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-
 import Context from "../config/context";
 
 export default function Navbar() {
   const context = useContext(Context);
-  const { user } = context;
-
-  const path = "home";
-  const [activeItem, setActiveItem] = useState(path);
+  const { user, clearUser } = context;
+  const [activeItem, setActiveItem] = useState("home");
 
   const handleItemClick = (e, { name }) => setActiveItem(name);
+
+  const handleLogout = () => {
+    clearUser();
+    setActiveItem("home");
+  };
 
   const userInfo = user ? (
     <Menu.Menu position="right">
       <Menu.Item
         name="logout"
         active={activeItem === "logout"}
-        onClick={handleItemClick}
+        onClick={handleLogout}
         as={Link}
         to="/"
       />
@@ -34,16 +35,16 @@ export default function Navbar() {
         to="/login"
       />
       <Menu.Item
-        name="sign in"
-        active={activeItem === "sign in"}
+        name="signup"
+        active={activeItem === "signup"}
         onClick={handleItemClick}
-        userState
         as={Link}
-        to="/signin"
+        to="/signup"
       />
     </Menu.Menu>
   );
-  const menuBar = (
+
+  return (
     <Menu pointing secondary size="massive" color="teal">
       <Menu.Item
         name="home"
@@ -66,8 +67,16 @@ export default function Navbar() {
         as={Link}
         to="/products"
       />
+      {user && (
+        <Menu.Item
+          name="ShoppingCart"
+          active={activeItem === "ShoppingCart"}
+          onClick={handleItemClick}
+          as={Link}
+          to="/cart"
+        ></Menu.Item>
+      )}
       {userInfo}
     </Menu>
   );
-  return menuBar;
 }

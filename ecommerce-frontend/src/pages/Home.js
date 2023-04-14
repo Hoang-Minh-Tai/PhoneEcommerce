@@ -11,7 +11,7 @@ export default function Home() {
   const greeting = user ? (
     <div>
       <Label size="massive" color="teal">
-        Welcome, {user.email}
+        Welcome, {user.username}
       </Label>
     </div>
   ) : (

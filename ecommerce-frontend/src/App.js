@@ -14,6 +14,7 @@ import Products from "./pages/Products";
 import Categories from "./pages/Categories";
 import Login from "./pages/Login";
 import Signin from "./pages/Signin";
+import ShoppingCart from "./pages/Cart";
 
 function App() {
   return (
@@ -26,7 +27,8 @@ function App() {
             <Route exact path="/categories" component={Categories} />
             <Route exact path="/products" component={Products} />
             <Route exact path="/login" component={Login} />
-            <Route exact path="/signin" component={Signin} />
+            <Route exact path="/signup" component={Signin} />
+            <Route exact path="/cart" component={ShoppingCart} />
           </Container>
         </Switch>
       </Router>
