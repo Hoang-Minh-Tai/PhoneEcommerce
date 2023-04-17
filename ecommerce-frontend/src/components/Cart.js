@@ -12,21 +12,12 @@ import {
 } from "semantic-ui-react";
 import Context from "../config/context";
 
-export default function ShoppingCart() {
-  const context = useContext(Context);
-  const { user, cart, getCart, updateCart } = context;
-
-  useEffect(() => {
-    getCart();
-  }, []);
-
-  const handleQuantityChange = (index, quantity) => {
-      console.log("quantity here", cart[index].id)
-    updateCart(cart[index].id, quantity)
-  };
+export default function Cart(props) {
+  const { cart, deleteCartItem, updateCart } = useContext(Context);
 
   const handleCheckout = () => {
     // TODO: Implement checkout logic
+    props.checkout(false);
   };
 
   const cartList = cart
@@ -34,20 +25,25 @@ export default function ShoppingCart() {
         const item = elm.product;
         const itemTotalPrice = item.price * elm.quantity;
         return (
-          <List.Item key={index}>
+          <List.Item key={elm.id}>
             <List.Content floated="right">
               <Input
                 type="number"
                 min={1}
                 value={elm.quantity}
                 onChange={(event) =>
-                  handleQuantityChange(index, parseInt(event.target.value))
+                  updateCart(elm.id, parseInt(event.target.value))
                 }
                 style={{ width: "60px" }}
               />
               <Label color="green" tag>
                 ${itemTotalPrice.toFixed(2)}
               </Label>
+              <Button
+                color="red"
+                icon="trash"
+                onClick={() => deleteCartItem(elm.id)}
+              />
             </List.Content>
             <Image avatar src={item.image} />
             <List.Content>{item.model}</List.Content>

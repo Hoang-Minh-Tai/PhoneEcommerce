@@ -7,6 +7,7 @@ import com.springbootecommerce.dto.CreateProductDto;
 import com.springbootecommerce.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,7 @@ import com.springbootecommerce.repository.ProductRepository;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin("*")
+
 public class ProductController {
 
 	@Autowired
@@ -43,6 +44,7 @@ public class ProductController {
 	}
 
 	@PostMapping("/add")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<Object> addProduct(@RequestBody CreateProductDto productRequest) {
 		try {
 			Category category = categoryRepository.findById(productRequest.getCategoryId())
@@ -71,12 +73,14 @@ public class ProductController {
 
 
 	@DeleteMapping("/delete/{id}")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public List<Product> deleteProduct(@PathVariable long id) {
 		productRepository.deleteById(id);
 		return productRepository.findAll();
 	}
 
 	@PutMapping("/update/{id}")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<Product> updateProduct(@PathVariable(value = "id") Long productId,
 												 @RequestBody Product productDetails) {
 
@@ -102,7 +106,7 @@ public class ProductController {
 			product.get().setImageUrl(productDetails.getImageUrl());
 		}
 
-		if (productDetails.getPrice() != null) {
+		if (productDetails.getPrice() != 0) {
 			product.get().setPrice(productDetails.getPrice());
 		}
 

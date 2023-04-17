@@ -14,7 +14,7 @@ import Products from "./pages/Products";
 import Categories from "./pages/Categories";
 import Login from "./pages/Login";
 import Signin from "./pages/Signin";
-import ShoppingCart from "./pages/Cart";
+import ShoppingCart from "./pages/ShoppingCart";
 
 function App() {
   return (

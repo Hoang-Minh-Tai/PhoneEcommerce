@@ -9,6 +9,7 @@ import com.springbootecommerce.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -39,6 +40,7 @@ public class DiscountController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Discount> createDiscount(@RequestBody CreateDiscountDto discountDto) {
         Product product = productRepository.findById(discountDto.getProductId()).orElse(null);
         Discount discount = new Discount();
@@ -51,6 +53,7 @@ public class DiscountController {
     }
 
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Discount> updateDiscount(@PathVariable("id") long id, @RequestBody UpdateDiscountDto updateDiscountDto) {
         Discount existingDiscount = discountRepository.findById(id).orElse(null);
         if (existingDiscount == null) {
@@ -63,6 +66,7 @@ public class DiscountController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<HttpStatus> deleteDiscount(@PathVariable("id") long id) {
         Discount discount = discountRepository.findById(id).orElse(null);
         if (discount == null) {

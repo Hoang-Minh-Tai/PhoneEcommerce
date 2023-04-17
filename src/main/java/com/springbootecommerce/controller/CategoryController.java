@@ -3,6 +3,7 @@ package com.springbootecommerce.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,7 @@ import com.springbootecommerce.repository.CategoryRepository;
 
 @RestController
 @RequestMapping("/api/categories")
-@CrossOrigin("*")
+
 public class CategoryController {
 
     @Autowired
@@ -36,18 +37,21 @@ public class CategoryController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<Category> addCategory(@RequestBody Category category) {
         categoryRepository.save(category);
         return categoryRepository.findAll();
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<Category> deleteCategory(@PathVariable long id) {
         categoryRepository.deleteById(id);
         return categoryRepository.findAll();
     }
 
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<Category> updateCategory(@PathVariable long id, @RequestBody Category category) {
         if (categoryRepository.existsById(id)) {
             category.setId(id);

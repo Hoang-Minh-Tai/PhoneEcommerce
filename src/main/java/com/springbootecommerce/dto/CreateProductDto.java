@@ -4,7 +4,6 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
 
 public class CreateProductDto {
     @NotBlank(message = "Brand is required")
@@ -24,7 +23,7 @@ public class CreateProductDto {
 
     @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
-    private BigDecimal price;
+    private double price;
 
     @NotBlank(message = "Memory version is required")
     @Size(max = 25, message = "Memory version cannot be more than 25 characters")
@@ -55,7 +54,7 @@ public class CreateProductDto {
     }
 
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return price;
     }
 

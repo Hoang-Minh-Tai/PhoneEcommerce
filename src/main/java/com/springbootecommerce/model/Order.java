@@ -1,18 +1,17 @@
 package com.springbootecommerce.model;
 
+import com.springbootecommerce.enums.OrderStatus;
+import com.springbootecommerce.enums.PaymentType;
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
 public class Order {
 
-    public enum Status {
-        PENDING,
-        SHIPPED,
-        DELIVERED
-    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,36 +20,33 @@ public class Order {
     private Date orderDate;
 
     @Column(name = "total_price")
-    private BigDecimal totalPrice;
+    private double totalPrice;
 
     @ManyToOne()
     private User user;
 
-    @ManyToOne()
-    private Product product;
+    @ManyToMany()
+    private List<Product> product;
 
     @Column()
-    private Status status;
+    private OrderStatus status;
+
+    private PaymentType paymentType;
+
+    @CreationTimestamp
+    private Date createdAt;
 
     public Order() {
         // Default constructor for JPA
     }
 
-    public Order(Date orderDate, BigDecimal totalPrice, User user, Product product) {
+    public Order(Date orderDate, double totalPrice, User user, List<Product> product, OrderStatus status, PaymentType paymentType) {
         this.orderDate = orderDate;
         this.totalPrice = totalPrice;
         this.user = user;
         this.product = product;
-    }
-
-    // Getters and setters
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        this.status = status;
+        this.paymentType = paymentType;
     }
 
     public Date getOrderDate() {
@@ -61,11 +57,11 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-    public BigDecimal getTotalPrice() {
+    public double getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(BigDecimal totalPrice) {
+    public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
 
@@ -77,11 +73,27 @@ public class Order {
         this.user = user;
     }
 
-    public Product getProduct() {
+    public List<Product> getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(List<Product> product) {
         this.product = product;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public PaymentType getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(PaymentType paymentType) {
+        this.paymentType = paymentType;
     }
 }

@@ -14,7 +14,7 @@ export default function Signin() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState("other");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [shippingAddress, setShippingAddress] = useState("");
   const [error, setError] = useState("");
@@ -28,19 +28,6 @@ export default function Signin() {
     setShippingAddress(value);
 
   const handleSubmit = () => {
-    // Check if any required field is empty
-    if (
-      !name ||
-      !email ||
-      !password ||
-      !gender ||
-      !phoneNumber ||
-      !shippingAddress
-    ) {
-      setError("Please fill all required fields.");
-      return;
-    }
-
     const newUser = {
       username: name,
       email: email,
@@ -67,6 +54,7 @@ export default function Signin() {
             placeholder="John Doe"
             onChange={handleChangeName}
             value={name}
+            required
           />
 
           <Form.Input
@@ -75,6 +63,7 @@ export default function Signin() {
             placeholder="yourmail@mail.com"
             onChange={handleChangeEmail}
             value={email}
+            required
           />
 
           <Form.Input
@@ -84,6 +73,7 @@ export default function Signin() {
             type="password"
             onChange={handleChangePassword}
             value={password}
+            required
           />
 
           <Form.Group inline>
@@ -114,6 +104,7 @@ export default function Signin() {
             placeholder="123-456-7890"
             onChange={handleChangePhoneNumber}
             value={phoneNumber}
+            required
           />
 
           <Form.Input
@@ -122,6 +113,7 @@ export default function Signin() {
             placeholder="123 Main St, Anytown, USA"
             onChange={handleChangeShippingAddress}
             value={shippingAddress}
+            required
           />
 
           {error && (

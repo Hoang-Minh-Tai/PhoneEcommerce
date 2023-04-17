@@ -40,6 +40,7 @@ export default function Login() {
             placeholder="your username"
             onChange={handleChange1}
             value={username.value}
+            required
           />
           <Form.Input
             name="password"
@@ -48,6 +49,7 @@ export default function Login() {
             type="password"
             onChange={handleChange2}
             value={password.value}
+            required
           />
           {error && (
             <Label basic size="large" color="red" prompt>

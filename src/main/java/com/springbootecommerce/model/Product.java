@@ -1,7 +1,6 @@
 package com.springbootecommerce.model;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "product")
@@ -24,7 +23,7 @@ public class Product {
 	private String imageUrl;
 
 	@Column(name = "price", nullable = false)
-	private BigDecimal price;
+	private double price;
 
 	@Column(name = "memory_version")
 	private String memoryVersion;
@@ -40,7 +39,7 @@ public class Product {
 		// Default constructor for JPA
 	}
 
-	public Product(String brand, String model, String description, String imageUrl, BigDecimal price, String memoryVersion,  boolean inStock, Category category) {
+	public Product(String brand, String model, String description, String imageUrl, double price, String memoryVersion,  boolean inStock, Category category) {
 		this.brand = brand;
 		this.model = model;
 		this.description = description;
@@ -93,11 +92,11 @@ public class Product {
 		this.imageUrl = imageUrl;
 	}
 
-	public BigDecimal getPrice() {
+	public double getPrice() {
 		return price;
 	}
 
-	public void setPrice(BigDecimal price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 
