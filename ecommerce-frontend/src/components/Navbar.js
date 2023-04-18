@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
-
+import { NavLink } from 'react-router-dom'
 import { Menu } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-
+import logo from '../assets/coffe-delivery-logo.svg'
 import Context from "../config/context";
 
 export default function Navbar() {
@@ -26,6 +26,7 @@ export default function Navbar() {
     </Menu.Menu>
   ) : (
     <Menu.Menu position="right">
+      
       <Menu.Item
         name="login"
         active={activeItem === "login"}
@@ -44,7 +45,19 @@ export default function Navbar() {
     </Menu.Menu>
   );
   const menuBar = (
-    <Menu pointing secondary size="massive" color="teal">
+    <div style={{ display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: '50px',
+    padding: '0 1rem',
+    backgroundColor: '#f5f5f5'}}>
+  <div>
+    <NavLink to="/">
+      <img src={logo} alt="Logo" style={{ height: "50px", marginRight: "1rem" }} />
+    </NavLink>
+  </div>
+  <div>
+    <Menu pointing secondary size="massive" color="red">
       <Menu.Item
         name="home"
         active={activeItem === "home"}
@@ -66,8 +79,14 @@ export default function Navbar() {
         as={Link}
         to="/products"
       />
-      {userInfo}
     </Menu>
+  </div>
+  <div>
+  <Menu pointing secondary size="massive" color="red">
+    {userInfo}
+    </Menu>
+    </div>
+</div>
   );
   return menuBar;
 }

@@ -1,11 +1,10 @@
 import React, { useContext, useState, useEffect } from "react";
 
 import { Grid, Segment, Card } from "semantic-ui-react";
-
+import './styles.css'
 import Category from "../components/Category";
 import Pagination from "../components/Pagination";
 import AddCategoryForm from "../components/AddCategoryForm";
-
 import Context from "../config/context";
 
 export default function Categories() {
@@ -56,18 +55,22 @@ export default function Categories() {
       <Segment>
         <Grid>
           <Grid.Column floated="left" width={5}>
-            <h1>Recent Categories</h1>
+            <h1>Categories</h1>
           </Grid.Column>
           <Grid.Column floated="right" width={5}>
             {add}
           </Grid.Column>
         </Grid>
       </Segment>
+      <div  style={{ display: 'flex', justifyContent: 'center' }}>
+      <div className="category-wrapper">
       <Card.Group fluid itemsPerRow="3">
         {views}
       </Card.Group>
       <br />
       <center>{pagination}</center>
+    </div>
+    </div>
     </div>
   );
 }

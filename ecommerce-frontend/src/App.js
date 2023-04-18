@@ -21,13 +21,11 @@ function App() {
       <Router>
         <Navbar />
         <Switch>
-          <Container>
             <Route exact path="/" component={Home} />
             <Route exact path="/categories" component={Categories} />
             <Route exact path="/products" component={Products} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/signin" component={Signin} />
-          </Container>
         </Switch>
       </Router>
     </ContextConnector>

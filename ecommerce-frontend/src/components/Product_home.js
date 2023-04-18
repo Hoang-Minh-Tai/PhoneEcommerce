@@ -47,8 +47,8 @@ export default function Product(props) {
       <div className="product-container">
       <ImageResizer
         src={pic}
-        width={450} // desired width in pixels
-        height={400} // desired height in pixels
+        width={250} // desired width in pixels
+        height={200} // desired height in pixels
       />
       </div>
       <Label color="teal" size="large" attached="top left">
