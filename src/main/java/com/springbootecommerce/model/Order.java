@@ -6,7 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "orders")
@@ -22,15 +22,18 @@ public class Order {
     @Column(name = "total_price")
     private double totalPrice;
 
+    @OneToMany()
+    private Set<OrderProduct> products;
+
     @ManyToOne()
     private User user;
 
-    @ManyToMany()
-    private List<Product> product;
-
+    @Enumerated(EnumType.STRING)
     @Column()
     private OrderStatus status;
 
+    @Enumerated(EnumType.STRING)
+    @Column()
     private PaymentType paymentType;
 
     @CreationTimestamp
@@ -40,13 +43,17 @@ public class Order {
         // Default constructor for JPA
     }
 
-    public Order(Date orderDate, double totalPrice, User user, List<Product> product, OrderStatus status, PaymentType paymentType) {
+    public Order(Date orderDate, double totalPrice, Set<OrderProduct> products, User user, OrderStatus status, PaymentType paymentType) {
         this.orderDate = orderDate;
         this.totalPrice = totalPrice;
+        this.products = products;
         this.user = user;
-        this.product = product;
         this.status = status;
         this.paymentType = paymentType;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Date getOrderDate() {
@@ -73,12 +80,12 @@ public class Order {
         this.user = user;
     }
 
-    public List<Product> getProduct() {
-        return product;
+    public Set<OrderProduct> getProducts() {
+        return products;
     }
 
-    public void setProduct(List<Product> product) {
-        this.product = product;
+    public void setProducts(Set<OrderProduct> products) {
+        this.products = products;
     }
 
     public OrderStatus getStatus() {

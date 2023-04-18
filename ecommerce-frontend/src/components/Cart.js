@@ -13,7 +13,11 @@ import {
 import Context from "../config/context";
 
 export default function Cart(props) {
-  const { cart, deleteCartItem, updateCart } = useContext(Context);
+  const { cart, deleteCartItem, updateCart, getCart } = useContext(Context);
+
+  useEffect(() => {
+    getCart();
+  }, []);
 
   const handleCheckout = () => {
     // TODO: Implement checkout logic

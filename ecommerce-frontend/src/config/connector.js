@@ -15,11 +15,14 @@ import {
   GET_USER,
   GET_CATEGORIES,
   GET_PRODUCTS,
+  GET_ORDERS,
   POST_USER,
   POST_CATEGORY,
   POST_PRODUCTS,
+  POST_ORDER,
   GET_CART,
   UPDATE_CART,
+  UPDATE_ORDER,
   DELETE_ITEM,
 } from "./values";
 
@@ -30,6 +33,7 @@ const Context = (props) => {
     products: [],
     categories: [],
     cart: [],
+    orders: [],
   };
 
   const userFromStorage = localStorage.getItem("user");
@@ -87,13 +91,33 @@ const Context = (props) => {
     });
   };
 
+  const addOrder = async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log(user);
+
+    const res = await axiosClient.post("/orders/add", {
+      headers: {
+        Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+      },
+    });
+    console.log(res);
+
+    dispatch({
+      type: POST_ORDER,
+      payload: res.data,
+    });
+  };
+
   // POST Methods
   const getUser = async (user) => {
     try {
       const res = await axiosClient.post("/users/login", user);
 
       if (res.status == 200) {
-        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ ...user, role: res.data.role })
+        );
       }
 
       dispatch({
@@ -141,6 +165,23 @@ const Context = (props) => {
     return res.data;
   };
 
+  const getOrders = async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const res = await axiosClient.get("/orders/all", {
+      headers: {
+        Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+      },
+    });
+
+    dispatch({
+      type: GET_ORDERS,
+      payload: res.data,
+    });
+
+    return res.data;
+  };
+
   const clearUser = async () => {
     localStorage.clear();
 
@@ -169,6 +210,25 @@ const Context = (props) => {
     });
   };
 
+  const updateOrder = async (id, status) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const res = await axiosClient.put(
+      "/orders/update/" + id,
+      { status },
+      {
+        headers: {
+          Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+        },
+      }
+    );
+
+    dispatch({
+      type: UPDATE_ORDER,
+      payload: res.data,
+    });
+  };
+
   const deleteCartItem = async (id) => {
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -192,17 +252,21 @@ const Context = (props) => {
         currency: state.currency,
         categories: state.categories,
         products: state.products,
+        orders: state.orders,
         addUser,
         addCategory,
         addProduct,
+        addOrder,
         getUser,
         getCart,
         clearUser,
         getCategories,
         getProducts,
         getCurrency,
+        getOrders,
         updateCart,
         deleteCartItem,
+        updateOrder,
       }}
     >
       {props.children}

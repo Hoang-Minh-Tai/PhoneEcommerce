@@ -2,13 +2,16 @@ import {
   POST_CATEGORY,
   GET_CATEGORIES,
   GET_PRODUCTS,
+  GET_ORDERS,
   POST_USER,
   POST_PRODUCTS,
+  POST_ORDER,
   GET_USER,
   GET_CURRENCY,
   GET_CART,
   UPDATE_CART,
   DELETE_ITEM,
+  UPDATE_ORDER,
 } from "./values";
 
 export default (state, action) => {
@@ -23,6 +26,11 @@ export default (state, action) => {
       return {
         ...state,
         user: action.payload,
+      };
+    case POST_ORDER:
+      return {
+        ...state,
+        orders: state.orders.push(action.payload),
       };
     case POST_CATEGORY:
       return {
@@ -59,6 +67,14 @@ export default (state, action) => {
         ),
       };
 
+    case UPDATE_ORDER:
+      return {
+        ...state,
+        orders: state.orders.map((item) =>
+          item.id === action.payload.id ? action.payload : item
+        ),
+      };
+
     case DELETE_ITEM:
       const filteredArray = state.cart.filter(
         (item) => item.id !== action.payload
@@ -72,6 +88,12 @@ export default (state, action) => {
       return {
         ...state,
         categories: action.payload,
+      };
+
+    case GET_ORDERS:
+      return {
+        ...state,
+        orders: action.payload,
       };
 
     default:

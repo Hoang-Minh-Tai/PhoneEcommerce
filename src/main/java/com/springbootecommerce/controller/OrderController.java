@@ -1,18 +1,15 @@
 package com.springbootecommerce.controller;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+import com.springbootecommerce.dto.CreateOrderDto;
+import com.springbootecommerce.dto.UpdateOrderDto;
+import com.springbootecommerce.enums.OrderStatus;
 import com.springbootecommerce.model.*;
-import com.springbootecommerce.repository.DiscountRepository;
-import com.springbootecommerce.repository.ShoppingCartItemRepository;
-import com.springbootecommerce.repository.UserRepository;
+import com.springbootecommerce.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,10 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.springbootecommerce.repository.OrderRepository;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -37,29 +31,40 @@ public class OrderController {
     private ShoppingCartItemRepository shoppingCartItemRepository;
     @Autowired
     private DiscountRepository discountRepository;
+    @Autowired
+    private OrderProductRepository orderProductRepository;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/all")
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/get/{id}")
     public Order getOrderById(@PathVariable long id) {
         return orderRepository.findById(id).orElse(null);
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/add")
-    public List<Order> addOrder(Authentication authentication) {
+    public Order addOrder(Authentication authentication, @RequestBody CreateOrderDto createOrderDto) {
         String username = authentication.getName();
         User user = userRepository.findByUsername(username);
 
         // Find all shopping cart items in the user's shopping cart
         List<ShoppingCartItem> cartItems = shoppingCartItemRepository.findByUser(user);
+        Order order = new Order();
+        order.setUser(user);
+        order.setOrderDate(new Date());
+        order.setStatus(OrderStatus.PENDING);
+        order.setPaymentType(createOrderDto.getPaymentType());
 
+        Set<OrderProduct> productList = new HashSet<>();
         double totalPrice = 0;
         for (ShoppingCartItem item : cartItems) {
             Product product = item.getProduct();
-
+            OrderProduct orderProduct = new OrderProduct();
             // Check if there's a discount for this product
             Discount discount = discountRepository.findByProduct(product).orElse(null);
 
@@ -68,10 +73,17 @@ public class OrderController {
                 price = price * (1 - discount.getDiscount() / 100d);
             }
 
+            orderProduct.setProduct(product);
+            orderProduct.setOrder(order);
+            orderProduct.setQuantity(item.getQuantity());
             totalPrice += price * item.getQuantity();
+            productList.add(orderProduct);
+            orderProductRepository.save(orderProduct);
         }
-
-        return orderRepository.findAll();
+        order.setProducts(productList);
+        order.setTotalPrice(totalPrice);
+        orderRepository.save(order);
+        return order;
     }
 
     @DeleteMapping("/delete/{id}")
@@ -80,10 +92,12 @@ public class OrderController {
         return orderRepository.findAll();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/update/{id}")
-    public List<Order> updateOrder(@PathVariable long id, @RequestBody Order order) {
-
-
-        return orderRepository.findAll();
+    public Order updateOrder(@PathVariable long id, @RequestBody UpdateOrderDto updateOrderDto) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setStatus(updateOrderDto.getOrderStatus());
+        orderRepository.save(order);
+        return order;
     }
 }

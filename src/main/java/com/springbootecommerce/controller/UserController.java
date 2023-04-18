@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterUserDto registerUserDto) {
+    public ResponseEntity<?> registerUser(@RequestBody RegisterUserDto registerUserDto) {
 
         if (userRepository.findByUsername(registerUserDto.getUsername()) != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already in use");

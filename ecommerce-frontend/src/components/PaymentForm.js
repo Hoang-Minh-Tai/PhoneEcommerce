@@ -25,8 +25,7 @@ export default function PaymentForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // TODO: Implement payment processing logic here
+    props.process();
   };
 
   const handleBackToCartClick = () => {

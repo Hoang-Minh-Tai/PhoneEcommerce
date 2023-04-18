@@ -6,8 +6,6 @@ import {
   Form,
   Modal,
   Button,
-  Header,
-  Dropdown,
   Image,
   Grid
 } from "semantic-ui-react";
