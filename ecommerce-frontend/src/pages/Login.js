@@ -32,7 +32,7 @@ export default function Login() {
   ) : (
     <Card fluid>
       <Card.Content>
-        <Header textAlign="center">¡Hello again!</Header>
+        <Header textAlign="center">Login</Header>
         <Form onSubmit={handleSubmit}>
           <Form.Input
             name="username"

@@ -1,7 +1,6 @@
 package com.springbootecommerce.model;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "product")
@@ -32,6 +31,8 @@ public class Product {
 	@Column(name = "in_stock")
 	private boolean inStock;
 
+	@OneToOne(mappedBy="product", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Discount discount;
 	@ManyToOne()
 	@JoinColumn(name = "category_id")
 	private Category category;
@@ -40,7 +41,7 @@ public class Product {
 		// Default constructor for JPA
 	}
 
-	public Product(String brand, String model, String description, String imageUrl, double price, String memoryVersion, boolean inStock, Category category) {
+	public Product(String brand, String model, String description, String imageUrl, double price, String memoryVersion, boolean inStock, Discount discount, Category category) {
 		this.brand = brand;
 		this.model = model;
 		this.description = description;
@@ -48,6 +49,7 @@ public class Product {
 		this.price = price;
 		this.memoryVersion = memoryVersion;
 		this.inStock = inStock;
+		this.discount = discount;
 		this.category = category;
 	}
 
@@ -125,5 +127,11 @@ public class Product {
 		this.category = category;
 	}
 
+	public Discount getDiscount() {
+		return discount;
+	}
 
+	public void setDiscount(Discount discount) {
+		this.discount = discount;
+	}
 }

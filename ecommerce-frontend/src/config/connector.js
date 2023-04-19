@@ -111,7 +111,6 @@ const Context = (props) => {
 
   const addOrder = async (paymentType) => {
     const user = JSON.parse(localStorage.getItem("user"));
-    console.log("here is the user", user);
     try {
       const res = await axiosClient.post(
         "/orders/add",

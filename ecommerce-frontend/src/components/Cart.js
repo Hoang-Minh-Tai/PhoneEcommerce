@@ -28,8 +28,9 @@ export default function Cart(props) {
     ? cart.map((elm, index) => {
         const item = elm.product;
         const itemTotalPrice = item.price * elm.quantity;
+        const discount = item.discount.discount;
         return (
-          <List.Item key={elm.id}>
+          <List.Item key={index}>
             <List.Content floated="right">
               <Input
                 type="number"
@@ -41,7 +42,7 @@ export default function Cart(props) {
                 style={{ width: "60px" }}
               />
               <Label color="green" tag>
-                ${itemTotalPrice.toFixed(2)}
+                ${((item.price * (100 - discount)) / 100).toFixed(2)}
               </Label>
               <Button
                 color="red"
@@ -51,9 +52,9 @@ export default function Cart(props) {
             </List.Content>
             <Image avatar src={item.imageUrl} />
             <List.Content>{item.model}</List.Content>
-            <List.Content>{item.brand}</List.Content>
-            <List.Content>${item.price.toFixed(2)}</List.Content>
-            <List.Content>Discount: {item.discount}%</List.Content>
+            {/* <List.Content>{item.brand}</List.Content>
+            <List.Content>${item.price.toFixed(2)}</List.Content> */}
+            <List.Content>Discount: {discount}%</List.Content>
           </List.Item>
         );
       })
@@ -61,7 +62,12 @@ export default function Cart(props) {
 
   const totalPrice = cart
     ? cart.reduce((accumulator, item) => {
-        return accumulator + item.product.price * item.quantity;
+        return (
+          accumulator +
+          ((item.product.price * (100 - item.product.discount.discount)) /
+            100) *
+            item.quantity
+        );
       }, 0)
     : 0;
 

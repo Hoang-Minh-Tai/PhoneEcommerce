@@ -68,6 +68,7 @@ public class ProductController {
 					productRequest.getPrice(),
 					productRequest.getMemoryVersion(),
 					productRequest.isInStock(),
+					discount,
 					category
 			);
 
@@ -76,7 +77,6 @@ public class ProductController {
 			discount.setDiscount(productRequest.getDiscount());
 			discount.setExpiredAt(null);
 			productRepository.save(product);
-			discountRepository.save(discount);
 			return ResponseEntity.ok(productRepository.findAll());
 		} catch (RuntimeException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());

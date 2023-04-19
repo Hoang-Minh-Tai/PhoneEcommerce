@@ -9,6 +9,7 @@ export default function Orders() {
 
   useEffect(() => {
     getOrders();
+    console.log(orders);
   }, []);
 
   const renderOrdersTable = () => (
