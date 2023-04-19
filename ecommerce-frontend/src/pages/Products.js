@@ -1,11 +1,10 @@
 import React, { useContext, useState, useEffect } from "react";
 
-import { Grid, Card, Segment } from "semantic-ui-react";
+import { Grid, Card, Segment, Input } from "semantic-ui-react";
 
 import Product from "../components/Product";
 import Pagination from "../components/Pagination";
 import AddProductForm from "../components/AddProductForm";
-
 import Context from "../config/context";
 
 export default function Products() {
@@ -29,7 +28,7 @@ export default function Products() {
 
   const views =
     products.length > 0 ? (
-      currentProducts.map((product) => <Product product={product} />)
+      currentProducts.map((product, index) => <Product product={product} />)
     ) : (
       <Card>
         <Card.Content>
@@ -52,7 +51,7 @@ export default function Products() {
   const add = user ? user.role == "ADMIN" ? <AddProductForm /> : null : null;
 
   return (
-    <div>
+    <>
       <Segment>
         <Grid>
           <Grid.Column floated="left" width={5}>
@@ -60,14 +59,19 @@ export default function Products() {
           </Grid.Column>
           <Grid.Column floated="right" width={5}>
             {add}
+            <Input icon="search" placeholder="Search..." fluid />
           </Grid.Column>
         </Grid>
       </Segment>
-      <Card.Group fluid itemsPerRow="3">
-        {views}
-      </Card.Group>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div className="products-wrapper">
+          <Card.Group fluid itemsPerRow="3">
+            {views}
+          </Card.Group>
+        </div>
+      </div>
       <br />
       <center>{pagination}</center>
-    </div>
+    </>
   );
 }

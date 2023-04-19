@@ -40,7 +40,7 @@ public class Product {
 		// Default constructor for JPA
 	}
 
-	public Product(String brand, String model, String description, String imageUrl, double price, String memoryVersion,  boolean inStock, Category category) {
+	public Product(String brand, String model, String description, String imageUrl, double price, String memoryVersion, boolean inStock, Category category) {
 		this.brand = brand;
 		this.model = model;
 		this.description = description;
@@ -124,4 +124,6 @@ public class Product {
 	public void setCategory(Category category) {
 		this.category = category;
 	}
+
+
 }

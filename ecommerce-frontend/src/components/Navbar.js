@@ -1,6 +1,9 @@
 import React, { useContext, useState } from "react";
-import { Menu } from "semantic-ui-react";
+
+import { NavLink } from "react-router-dom";
+import { Menu, Image } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import logo from "../assets/coffe-delivery-logo.svg";
 import Context from "../config/context";
 
 export default function Navbar() {
@@ -45,49 +48,56 @@ export default function Navbar() {
   );
 
   return (
-    <Menu pointing secondary size="massive" color="teal">
-      <Menu.Item
-        name="home"
-        active={activeItem === "home"}
-        onClick={handleItemClick}
-        as={Link}
-        to="/"
-      />
-      <Menu.Item
-        name="categories"
-        active={activeItem === "categories"}
-        onClick={handleItemClick}
-        as={Link}
-        to="/categories"
-      />
-      <Menu.Item
-        name="products"
-        active={activeItem === "products"}
-        onClick={handleItemClick}
-        as={Link}
-        to="/products"
-      />
-      {user && user.role != "ADMIN" && (
-        <>
-          <Menu.Item
-            name="ShoppingCart"
-            active={activeItem === "ShoppingCart"}
-            onClick={handleItemClick}
-            as={Link}
-            to="/cart"
-          ></Menu.Item>
-        </>
-      )}
-      {user && user.role == "ADMIN" && (
+    <>
+      <Menu pointing secondary size="massive" color="red">
+        <Menu.Item>
+          <NavLink to="/">
+            <Image src={logo} alt="Logo" size="mini" />
+          </NavLink>
+        </Menu.Item>
         <Menu.Item
-          name="orders"
-          active={activeItem === "orders"}
+          name="home"
+          active={activeItem === "home"}
           onClick={handleItemClick}
           as={Link}
-          to="/orders"
-        ></Menu.Item>
-      )}
-      {userInfo}
-    </Menu>
+          to="/"
+        />
+        <Menu.Item
+          name="categories"
+          active={activeItem === "categories"}
+          onClick={handleItemClick}
+          as={Link}
+          to="/categories"
+        />
+        <Menu.Item
+          name="products"
+          active={activeItem === "products"}
+          onClick={handleItemClick}
+          as={Link}
+          to="/products"
+        />
+        {user && user.role !== "ADMIN" && (
+          <>
+            <Menu.Item
+              name="ShoppingCart"
+              active={activeItem === "ShoppingCart"}
+              onClick={handleItemClick}
+              as={Link}
+              to="/cart"
+            ></Menu.Item>
+          </>
+        )}
+        {user && user.role === "ADMIN" && (
+          <Menu.Item
+            name="orders"
+            active={activeItem === "orders"}
+            onClick={handleItemClick}
+            as={Link}
+            to="/orders"
+          ></Menu.Item>
+        )}
+        {userInfo}
+      </Menu>
+    </>
   );
 }

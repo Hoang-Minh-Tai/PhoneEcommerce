@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Table, Button, Grid, Segment, Modal } from "semantic-ui-react";
+import { Table, Button, Modal } from "semantic-ui-react";
 import Context from "../config/context";
 
 export default function OrderDetails({ order, close }) {

@@ -35,6 +35,8 @@ public class CreateProductDto {
     @NotNull(message = "Category ID is required")
     private Long categoryId;
 
+    private Integer discount;
+
 
     public String getBrand() {
         return brand;
@@ -70,5 +72,9 @@ public class CreateProductDto {
 
     public Long getCategoryId() {
         return categoryId;
+    }
+
+    public Integer getDiscount() {
+        return discount;
     }
 }

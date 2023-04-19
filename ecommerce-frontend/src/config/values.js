@@ -1,7 +1,8 @@
 export const GET_CURRENCY = "GET_CURRENCY";
 
 // POST Method Tags
-export const POST_USER = "POST_USUARIO";
+export const ADD_TO_CART = "ADD_TO_CART";
+export const POST_USER = "POST_USER";
 export const POST_CATEGORY = "POST_CATEGORY";
 export const POST_PRODUCTS = "POST_PRODUCTS";
 export const POST_ORDER = "POST_ORDER";

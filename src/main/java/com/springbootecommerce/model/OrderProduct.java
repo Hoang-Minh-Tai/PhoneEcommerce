@@ -18,6 +18,7 @@ public class OrderProduct {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Order order;
 
+
     private int quantity;
 
     public OrderProduct() {

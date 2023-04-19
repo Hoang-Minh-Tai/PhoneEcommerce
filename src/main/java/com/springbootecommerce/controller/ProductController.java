@@ -1,10 +1,13 @@
 package com.springbootecommerce.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import com.springbootecommerce.dto.CreateProductDto;
+import com.springbootecommerce.model.Discount;
 import com.springbootecommerce.repository.CategoryRepository;
+import com.springbootecommerce.repository.DiscountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +36,9 @@ public class ProductController {
 
 	@Autowired
 	private CategoryRepository categoryRepository;
+	@Autowired
+	private DiscountRepository discountRepository;
+
 	@GetMapping("/all")
 	public List<Product> getAllProducts() {
 		return productRepository.findAll();
@@ -50,6 +56,9 @@ public class ProductController {
 			Category category = categoryRepository.findById(productRequest.getCategoryId())
 					.orElseThrow(() -> new RuntimeException("Category not found"));
 
+			Discount discount = new Discount();
+
+
 			// Create the product using all fields
 			Product product = new Product(
 					productRequest.getBrand(),
@@ -62,7 +71,12 @@ public class ProductController {
 					category
 			);
 
+			discount.setProduct(product);
+			discount.setCreatedAt(new Date());
+			discount.setDiscount(productRequest.getDiscount());
+			discount.setExpiredAt(null);
 			productRepository.save(product);
+			discountRepository.save(discount);
 			return ResponseEntity.ok(productRepository.findAll());
 		} catch (RuntimeException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());

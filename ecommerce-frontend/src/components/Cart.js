@@ -20,7 +20,7 @@ export default function Cart(props) {
   }, []);
 
   const handleCheckout = () => {
-    // TODO: Implement checkout logic
+    props.setTotalPrice(totalPrice);
     props.checkout(false);
   };
 
@@ -49,9 +49,11 @@ export default function Cart(props) {
                 onClick={() => deleteCartItem(elm.id)}
               />
             </List.Content>
-            <Image avatar src={item.image} />
+            <Image avatar src={item.imageUrl} />
             <List.Content>{item.model}</List.Content>
-            <List.Content>${item.price}</List.Content>
+            <List.Content>{item.brand}</List.Content>
+            <List.Content>${item.price.toFixed(2)}</List.Content>
+            <List.Content>Discount: {item.discount}%</List.Content>
           </List.Item>
         );
       })

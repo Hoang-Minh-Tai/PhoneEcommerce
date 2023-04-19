@@ -2,9 +2,8 @@ import React, { useContext, useState } from "react";
 
 import { Redirect } from "react-router-dom";
 
-import { Grid, Card, Header, Button, Form, Label } from "semantic-ui-react";
+import { Card, Header, Button, Form, Label } from "semantic-ui-react";
 
-import Home from "./Home";
 
 import Context from "../config/context";
 

@@ -23,6 +23,7 @@ public class ShoppingCartItem {
     @Column(name = "quantity")
     private Integer quantity;
 
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
     private Date createdAt;

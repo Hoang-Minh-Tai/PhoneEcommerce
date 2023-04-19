@@ -21,6 +21,7 @@ import {
   POST_PRODUCTS,
   POST_ORDER,
   GET_CART,
+  ADD_TO_CART,
   UPDATE_CART,
   UPDATE_ORDER,
   DELETE_ITEM,
@@ -75,35 +76,76 @@ const Context = (props) => {
   };
 
   const addCategory = async (category) => {
-    const res = await axiosClient.post("/categories/add", category);
+    const user = JSON.parse(localStorage.getItem("user"));
+    const res = await axiosClient.post("/categories/add", category, {
+      headers: {
+        Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+      },
+    });
 
     dispatch({
       type: POST_CATEGORY,
       payload: res.data,
     });
   };
-  const addProduct = async (product) => {
-    const res = await axiosClient.post("/products/add", product);
 
-    dispatch({
-      type: POST_PRODUCTS,
-      payload: res.data,
-    });
+  const addProduct = async (product) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    try {
+      const res = await axiosClient.post("/products/add", product, {
+        headers: {
+          Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+        },
+      });
+
+      dispatch({
+        type: POST_PRODUCTS,
+        payload: res.data,
+      });
+    } catch (error) {
+      console.error(error);
+      console.log(error.response.data);
+    }
   };
 
-  const addOrder = async () => {
+  const addOrder = async (paymentType) => {
     const user = JSON.parse(localStorage.getItem("user"));
-    console.log(user);
+    console.log("here is the user", user);
+    try {
+      const res = await axiosClient.post(
+        "/orders/add",
+        { paymentType },
+        {
+          headers: {
+            Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+          },
+        }
+      );
+      dispatch({
+        type: POST_ORDER,
+        payload: res.data,
+      });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
 
-    const res = await axiosClient.post("/orders/add", {
-      headers: {
-        Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
-      },
-    });
-    console.log(res);
+  const addToCart = async (productId, quantity) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const res = await axiosClient.post(
+      "/cart/add",
+      { productId, quantity },
+      {
+        headers: {
+          Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+        },
+      }
+    );
 
     dispatch({
-      type: POST_ORDER,
+      type: ADD_TO_CART,
       payload: res.data,
     });
   };
@@ -113,7 +155,7 @@ const Context = (props) => {
     try {
       const res = await axiosClient.post("/users/login", user);
 
-      if (res.status == 200) {
+      if (res.status === 200) {
         localStorage.setItem(
           "user",
           JSON.stringify({ ...user, role: res.data.role })
@@ -139,6 +181,7 @@ const Context = (props) => {
       payload: res.data,
     });
   };
+
   const getProducts = async () => {
     const res = await axiosClient.get("/products/all");
 
@@ -254,6 +297,7 @@ const Context = (props) => {
         products: state.products,
         orders: state.orders,
         addUser,
+        addToCart,
         addCategory,
         addProduct,
         addOrder,

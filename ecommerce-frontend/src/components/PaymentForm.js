@@ -25,7 +25,7 @@ export default function PaymentForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.process();
+    props.process(paymentType.toUpperCase());
   };
 
   const handleBackToCartClick = () => {

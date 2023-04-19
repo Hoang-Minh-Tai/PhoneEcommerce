@@ -4,13 +4,13 @@ import PaymentForm from "../components/PaymentForm";
 import Context from "../config/context";
 
 export default function ShoppingCart() {
-  const { user, addOrder } = useContext(Context);
+  const { addOrder } = useContext(Context);
   const [showCart, setShowCart] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0);
 
-  const handlePayment = () => {
+  const handlePayment = (paymentType) => {
     console.log("he pays, he pays");
-    addOrder();
+    addOrder(paymentType);
   };
 
   return (

@@ -1,11 +1,9 @@
 import React, { useContext, useState, useEffect } from "react";
 
 import { Grid, Segment, Card } from "semantic-ui-react";
-
 import Category from "../components/Category";
 import Pagination from "../components/Pagination";
 import AddCategoryForm from "../components/AddCategoryForm";
-
 import Context from "../config/context";
 
 export default function Categories() {
@@ -29,7 +27,9 @@ export default function Categories() {
 
   const views =
     categories.length > 0 ? (
-      currentCategories.map(category => <Category category={category} />)
+      currentCategories.map((category) => (
+        <Category key={category.id} category={category} />
+      ))
     ) : (
       <Card>
         <Card.Content>
@@ -38,7 +38,7 @@ export default function Categories() {
       </Card>
     );
 
-  const paginate = pageNumber => setCurrentPage(pageNumber);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const pagination =
     categories.length > cardsPerPage ? (
@@ -49,25 +49,29 @@ export default function Categories() {
       />
     ) : null;
 
-  const add = user ? user.admin ? <AddCategoryForm /> : null : null;
+  const add = user ? user.role === "ADMIN" ? <AddCategoryForm /> : null : null;
 
   return (
     <div>
       <Segment>
         <Grid>
           <Grid.Column floated="left" width={5}>
-            <h1>Recent Categories</h1>
+            <h1>Categories</h1>
           </Grid.Column>
           <Grid.Column floated="right" width={5}>
             {add}
           </Grid.Column>
         </Grid>
       </Segment>
-      <Card.Group fluid itemsPerRow="3">
-        {views}
-      </Card.Group>
-      <br />
-      <center>{pagination}</center>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div className="category-wrapper">
+          <Card.Group fluid itemsPerRow="3">
+            {views}
+          </Card.Group>
+          <br />
+          <center>{pagination}</center>
+        </div>
+      </div>
     </div>
   );
 }

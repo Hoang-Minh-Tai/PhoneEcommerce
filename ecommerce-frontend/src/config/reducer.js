@@ -12,6 +12,7 @@ import {
   UPDATE_CART,
   DELETE_ITEM,
   UPDATE_ORDER,
+  ADD_TO_CART,
 } from "./values";
 
 export default (state, action) => {
@@ -57,6 +58,12 @@ export default (state, action) => {
       return {
         ...state,
         cart: action.payload,
+      };
+
+    case ADD_TO_CART:
+      state.cart.push(action.payload);
+      return {
+        ...state,
       };
 
     case UPDATE_CART:
