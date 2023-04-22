@@ -1,35 +1,30 @@
 import React, { useContext, useState } from "react";
 
 import "semantic-ui-css/semantic.min.css";
-import { Card, Header, Form, Button } from "semantic-ui-react";
+import { Card, Header, Form, Button, Label } from "semantic-ui-react";
 
 import Context from "../config/context";
 import { Redirect } from "react-router-dom";
 
 export default function Login() {
-  const context = useContext(Context);
-  const { user, getUser } = context;
+  const { user, getUser } = useContext(Context);
 
-  const [name, setName] = useState("");
-  const [picture, setPicture] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleChange1 = (e, { value }) => setName({ value });
-  const handleChange2 = (e, { value }) => setPicture({ value });
+  const handleChange1 = (e, { value }) => setUsername({ value });
+  const handleChange2 = (e, { value }) => setPassword({ value });
 
-  const handleSubmit = () => {
-    const username = name.value
-      .replace(".com", "")
-      .replace(".co", "")
-      .replace(".", "");
-
+  const handleSubmit = async () => {
     const user = {
-      username: username,
-      email: name.value,
-      password: picture.value,
-      is_admin: false
+      username: username.value,
+      password: password.value,
     };
-
-    getUser(user);
+    const data = await getUser(user);
+    if (data == 401) {
+      setError("The username and password you entered are not correct");
+    }
   };
 
   const view = user ? (
@@ -37,25 +32,32 @@ export default function Login() {
   ) : (
     <Card fluid>
       <Card.Content>
-        <Header textAlign="center">¡Hello again!</Header>
+        <Header textAlign="center">Login</Header>
         <Form onSubmit={handleSubmit}>
           <Form.Input
-            name="name"
-            label="Email"
-            placeholder="yourmail@mail.com"
+            name="username"
+            label="Username"
+            placeholder="your username"
             onChange={handleChange1}
-            value={name.value}
+            value={username.value}
+            required
           />
           <Form.Input
-            name="image"
+            name="password"
             label="Password"
             placeholder="*****"
             type="password"
             onChange={handleChange2}
-            value={picture.value}
+            value={password.value}
+            required
           />
+          {error && (
+            <Label basic size="large" color="red" prompt>
+              {error}
+            </Label>
+          )}
           <Button color="teal" fluid type="submit">
-            Sign in
+            Login
           </Button>
         </Form>
       </Card.Content>

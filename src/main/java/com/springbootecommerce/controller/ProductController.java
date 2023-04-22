@@ -1,12 +1,16 @@
 package com.springbootecommerce.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import com.springbootecommerce.dto.CreateProductDto;
+import com.springbootecommerce.model.Discount;
 import com.springbootecommerce.repository.CategoryRepository;
+import com.springbootecommerce.repository.DiscountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +28,7 @@ import com.springbootecommerce.repository.ProductRepository;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin("*")
+
 public class ProductController {
 
 	@Autowired
@@ -32,6 +36,9 @@ public class ProductController {
 
 	@Autowired
 	private CategoryRepository categoryRepository;
+	@Autowired
+	private DiscountRepository discountRepository;
+
 	@GetMapping("/all")
 	public List<Product> getAllProducts() {
 		return productRepository.findAll();
@@ -43,10 +50,14 @@ public class ProductController {
 	}
 
 	@PostMapping("/add")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<Object> addProduct(@RequestBody CreateProductDto productRequest) {
 		try {
 			Category category = categoryRepository.findById(productRequest.getCategoryId())
 					.orElseThrow(() -> new RuntimeException("Category not found"));
+
+			Discount discount = new Discount();
+
 
 			// Create the product using all fields
 			Product product = new Product(
@@ -57,9 +68,14 @@ public class ProductController {
 					productRequest.getPrice(),
 					productRequest.getMemoryVersion(),
 					productRequest.isInStock(),
+					discount,
 					category
 			);
 
+			discount.setProduct(product);
+			discount.setCreatedAt(new Date());
+			discount.setDiscount(productRequest.getDiscount());
+			discount.setExpiredAt(null);
 			productRepository.save(product);
 			return ResponseEntity.ok(productRepository.findAll());
 		} catch (RuntimeException e) {
@@ -71,12 +87,14 @@ public class ProductController {
 
 
 	@DeleteMapping("/delete/{id}")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public List<Product> deleteProduct(@PathVariable long id) {
 		productRepository.deleteById(id);
 		return productRepository.findAll();
 	}
 
 	@PutMapping("/update/{id}")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<Product> updateProduct(@PathVariable(value = "id") Long productId,
 												 @RequestBody Product productDetails) {
 
@@ -102,7 +120,7 @@ public class ProductController {
 			product.get().setImageUrl(productDetails.getImageUrl());
 		}
 
-		if (productDetails.getPrice() != null) {
+		if (productDetails.getPrice() != 0) {
 			product.get().setPrice(productDetails.getPrice());
 		}
 

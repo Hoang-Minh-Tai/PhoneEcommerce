@@ -9,15 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.Base64;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin("*")
 public class UserController {
 
     @Autowired
@@ -34,10 +36,20 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody RegisterUserDto registerUserDto) {
+    public ResponseEntity<?> registerUser(@RequestBody RegisterUserDto registerUserDto) {
+
+        if (userRepository.findByUsername(registerUserDto.getUsername()) != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already in use");
+        }
+
+        if (userRepository.findByEmail(registerUserDto.getEmail()) != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already in use");
+        }
+
         User savedUser = userService.save(registerUserDto);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginUserDto userCredentials) {
@@ -59,8 +71,8 @@ public class UserController {
                 .body(user);
     }
 
-
     @GetMapping("/test")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String test(Authentication authentication) {
         System.out.println(authentication);
         if (authentication != null && authentication.isAuthenticated()) {

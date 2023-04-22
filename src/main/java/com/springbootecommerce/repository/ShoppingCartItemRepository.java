@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * The Interface ShoppingCartItemRepository.
  *
- * @author devrobot
+ * 
  * @version 1.0
  */
 public interface ShoppingCartItemRepository extends JpaRepository<ShoppingCartItem, Long> {

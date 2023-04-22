@@ -1,7 +1,6 @@
 package com.springbootecommerce.model;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -23,6 +22,7 @@ public class ShoppingCartItem {
 
     @Column(name = "quantity")
     private Integer quantity;
+
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")

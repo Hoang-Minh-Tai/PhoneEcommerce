@@ -7,7 +7,7 @@ import com.springbootecommerce.model.Category;
 /**
  * The Interface CategoryRepository.
  *
- * @author devrobot
+ * 
  * @version 1.0
  */
 public interface CategoryRepository extends JpaRepository<Category, Long> {

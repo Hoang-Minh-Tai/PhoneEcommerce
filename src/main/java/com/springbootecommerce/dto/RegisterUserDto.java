@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 public class RegisterUserDto {
 
-    @NotBlank
+    @NotBlank(message = "Please enter username")
     private String username;
 
     @NotBlank

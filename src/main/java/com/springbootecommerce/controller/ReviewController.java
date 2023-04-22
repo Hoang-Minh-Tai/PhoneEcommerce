@@ -30,7 +30,7 @@ import com.springbootecommerce.repository.ReviewRepository;
 
 @RestController
 @RequestMapping("/api/reviews")
-@CrossOrigin("*")
+
 public class ReviewController {
 
     @Autowired

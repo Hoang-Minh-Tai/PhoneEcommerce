@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 /**
  * The Class Category.
  * 
- * @author devrobot
+ * 
  * @version 1.0
  */
 @Entity
@@ -29,8 +29,11 @@ public class Category {
 	private String name;
 
 	/** The description. */
-	@Column(name = "description")
+	@Column(name = "description", length = 10000)
 	private String description;
+
+	@Column(name = "picture")
+	private String picture;
 
 	/** The products. */
 	@OneToMany(mappedBy = "category")
@@ -42,25 +45,12 @@ public class Category {
 	public Category() {
 	}
 
-	/**
-	 * Instantiates a new category.
-	 *
-	 * @param id       the id
-	 * @param name     the name
-	 * @param description  the description
-	 * @param children the children
-	 */
-	public Category(Long id, String name, String description, List<Category> children) {
-		this.id = id;
+	public Category(String name, String description, String picture) {
 		this.name = name;
 		this.description = description;
+		this.picture = picture;
 	}
 
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
 	public Long getId() {
 		return id;
 	}
@@ -108,5 +98,13 @@ public class Category {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getPicture() {
+		return picture;
+	}
+
+	public void setPicture(String picture) {
+		this.picture = picture;
 	}
 }
