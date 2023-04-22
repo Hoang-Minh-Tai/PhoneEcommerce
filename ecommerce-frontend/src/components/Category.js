@@ -10,11 +10,11 @@ export default function Category(props) {
   return (
     <div className="category-container">
       <Card color="teal" style={{ width: "450px", height: "auto" }}>
-        <ImageResizer
-          src={pic}
-          width={450} // desired width in pixels
-          height={400} // desired height in pixels
-        />
+        <div className="product-container">
+          <div className="product-image-container">
+            <Image src={pic} className="product-image"/>
+          </div>
+        </div>
         <Card.Content>
           <Card.Header>{props.category.name}</Card.Header>
         </Card.Content>

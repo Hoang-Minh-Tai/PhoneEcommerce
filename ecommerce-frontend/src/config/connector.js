@@ -132,7 +132,7 @@ const Context = (props) => {
 
   const addToCart = async (productId, quantity) => {
     const user = JSON.parse(localStorage.getItem("user"));
-
+    try {
     const res = await axiosClient.post(
       "/cart/add",
       { productId, quantity },
@@ -147,6 +147,10 @@ const Context = (props) => {
       type: ADD_TO_CART,
       payload: res.data,
     });
+    return res.status;
+  } catch (error) {
+    return(error.response);
+  }
   };
 
   // POST Methods

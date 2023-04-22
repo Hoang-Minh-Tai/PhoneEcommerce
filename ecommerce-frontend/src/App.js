@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Container } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
-
+import Footer from "./pages/Footer";
 import ContextConnector from "./config/connector";
 
 // Components
@@ -23,7 +23,6 @@ function App() {
       <Router>
         <Navbar />
         <Switch>
-          <Container>
             <Route exact path="/" component={Home} />
             <Route exact path="/categories" component={Categories} />
             <Route exact path="/products" component={Products} />
@@ -31,8 +30,8 @@ function App() {
             <Route exact path="/signup" component={Signin} />
             <Route exact path="/cart" component={ShoppingCart} />
             <Route exact path="/orders" component={Orders} />
-          </Container>
         </Switch>
+        <Footer/>
       </Router>
     </ContextConnector>
   );

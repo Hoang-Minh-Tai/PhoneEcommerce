@@ -1,23 +1,19 @@
-import heroImage from "../assets/hero-image.png";
 import React, { useContext, useState, useEffect } from "react";
 import { Grid, Card, Segment } from "semantic-ui-react";
 import Product from "../components/Product";
 import Pagination from "../components/Pagination";
 import AddProductForm from "../components/AddProductForm";
-
 import Context from "../config/context";
 const Home = () => {
   const context = useContext(Context);
   const { user, products, getProducts } = context;
-  const [currentPage, setCurrentPage] = useState(1);
-  const [cardsPerPage, setCardsPerPage] = useState(6);
 
   useEffect(() => {
     getProducts();
   }, []);
 
   // Get current products
-
+  const heroImg = process.env.PUBLIC_URL + '/assets/hero-image.png'; // Update the file path here
   const views =
     products.length > 0 ? (
       products.slice(0, 4).map((product) => <Product product={product} />)
@@ -48,7 +44,7 @@ const Home = () => {
           </div>
 
           <div className="imageContainer">
-            <img src={heroImage} alt="" />
+            <img src={heroImg} alt="" />
           </div>
         </div>
       </div>
@@ -69,13 +65,10 @@ const Home = () => {
         style={{ display: "flex", justifyContent: "center" }}
       >
         <a href="/products">
-          <button class="button-33">See All</button>
+          <button className="button-33">See All</button>
         </a>
       </div>
       <br />
-
-      {/* Section People talk about */}
-      <div className="HeroContainer"></div>
     </div>
   );
 };

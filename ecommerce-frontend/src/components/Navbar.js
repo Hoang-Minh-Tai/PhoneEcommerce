@@ -3,16 +3,14 @@ import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Menu, Image } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import logo from "../assets/coffe-delivery-logo.svg";
 import Context from "../config/context";
 
 export default function Navbar() {
   const context = useContext(Context);
   const { user, clearUser } = context;
   const [activeItem, setActiveItem] = useState("home");
-
   const handleItemClick = (e, { name }) => setActiveItem(name);
-
+  const logoSrc = process.env.PUBLIC_URL + '/assets/coffe-delivery-logo.svg'; // Update the file path here
   const handleLogout = () => {
     clearUser();
     setActiveItem("home");
@@ -52,7 +50,7 @@ export default function Navbar() {
       <Menu pointing secondary size="massive" color="red">
         <Menu.Item>
           <NavLink to="/">
-            <Image src={logo} alt="Logo" size="mini" />
+            <Image src={logoSrc} alt="Logo" size="mini" />
           </NavLink>
         </Menu.Item>
         <Menu.Item
