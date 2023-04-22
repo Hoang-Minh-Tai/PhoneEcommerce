@@ -100,7 +100,7 @@ export default function Detail(props) {
                       </li>
                     </ul>
                     
-                    {user?(
+                    {user && user.role !== "ADMIN"?(
                     <div className="purchase-info">
                       
                       {product.inStock ? (
