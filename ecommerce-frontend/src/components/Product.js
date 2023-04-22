@@ -32,10 +32,6 @@ export default function Product(props) {
     : "https://media.idownloadblog.com/wp-content/uploads/2022/09/iPhone-14-and-iPhone-14-pro-wallpaper-idownloadblog-mock-up.png";
 
   const handleAddToCart = () => {
-    // Implement logic to add product to cart with selected quantity
-    // You can use the "quantity" state value in this function
-    console.log("Product ID:", product.id);
-    console.log("Quantity:", quantity);
     addToCart(product.id, quantity);
     setModalOpen(false);
   };
@@ -65,11 +61,11 @@ export default function Product(props) {
         <Modal.Header className="modal-header">{product.brand}</Modal.Header>
         <Modal.Content image>
           <Modal.Description className="modal-description">
-            <div class="card-wrapper">
-              <div class="card">
-                <div class="product-imgs">
-                  <div class="img-display">
-                    <div class="img-showcase">
+            <div className="card-wrapper">
+              <div className="card">
+                <div className="product-imgs">
+                  <div className="img-display">
+                    <div className="img-showcase">
                       <ImageResizer
                         src={pic}
                         width={500} // desired width in pixels
@@ -78,23 +74,23 @@ export default function Product(props) {
                     </div>
                   </div>
                 </div>
-                <div class="product-content">
-                  <h2 class="product-title">{product.model}</h2>
-                  <div class="product-rating">
+                <div className="product-content">
+                  <h2 className="product-title">{product.model}</h2>
+                  <div className="product-rating">
                     <FontAwesomeIcon icon={faStar} />
                     <FontAwesomeIcon icon={faStar} />
                     <FontAwesomeIcon icon={faStar} />
                     <FontAwesomeIcon icon={faStar} />
                     <FontAwesomeIcon icon={faStarHalfAlt} />
-                    <i class="fas fa-star-half-alt"></i>
+                    <i className="fas fa-star-half-alt"></i>
                     <span>4.7(21)</span>
                   </div>
 
-                  <div class="product-price">
-                    <p class="last-price">
+                  <div className="product-price">
+                    <p className="last-price">
                       Old Price: <span>${product.price.toFixed()}</span>
                     </p>
-                    <p class="new-price">
+                    <p className="new-price">
                       New Price:{" "}
                       <span>
                         ${(product.price * (100 - discount)) / 100} ({discount}
@@ -103,7 +99,7 @@ export default function Product(props) {
                     </p>
                   </div>
 
-                  <div class="product-detail">
+                  <div className="product-detail">
                     <h2>about this item: </h2>
                     <p>{product.description}</p>
                     <ul>
@@ -117,7 +113,7 @@ export default function Product(props) {
                         Memory: <span>{product.memoryVersion}</span>
                       </li>
                       <li>
-                        Category: <span>{product.brand}</span>
+                        Category: <span>{product.category.name}</span>
                       </li>
                       <li>
                         Shipping Area: <span>All over the world</span>
@@ -126,7 +122,7 @@ export default function Product(props) {
                         Shipping Fee: <span>Free</span>
                       </li>
                     </ul>
-                    <div class="purchase-info">
+                    <div className="purchase-info">
                       {product.inStock ? (
                         <>
                           <input
@@ -141,10 +137,10 @@ export default function Product(props) {
                           />
                           <button
                             type="button"
-                            class="btn"
+                            className="btn"
                             onClick={handleAddToCart}
                           >
-                            Add to Cart <i class="fas fa-shopping-cart"></i>
+                            Add to Cart <i className="fas fa-shopping-cart"></i>
                           </button>
                         </>
                       ) : (

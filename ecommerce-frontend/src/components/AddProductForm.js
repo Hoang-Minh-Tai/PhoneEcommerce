@@ -4,9 +4,10 @@ import { Form, Modal, Button, Header, Dropdown } from "semantic-ui-react";
 
 import Context from "../config/context";
 
-export default function AddProductForm() {
+export default function AddProductForm(props) {
   const context = useContext(Context);
-  const { categories, getCategories, addProduct } = context;
+  const { categories, getCategories, addProduct, updateProduct } = context;
+  const { product } = props;
 
   useEffect(() => {
     getCategories();
@@ -18,15 +19,21 @@ export default function AddProductForm() {
     value: category.id,
   }));
 
-  const [model, setModel] = useState("");
-  const [brand, setBrand] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [memoryVersion, setMemoryVersion] = useState("");
-  const [inStock, setInStock] = useState(true);
-  const [category, setCategory] = useState("");
-  const [discount, setDiscount] = useState("");
+  const [model, setModel] = useState(product ? product.model : "");
+  const [brand, setBrand] = useState(product ? product.brand : "");
+  const [description, setDescription] = useState(
+    product ? product.description : ""
+  );
+  const [price, setPrice] = useState(product ? product.price : "");
+  const [imageUrl, setImageUrl] = useState(product ? product.imageUrl : "");
+  const [memoryVersion, setMemoryVersion] = useState(
+    product ? product.memoryVersion : ""
+  );
+  const [inStock, setInStock] = useState(product ? product.inStock : "");
+  const [category, setCategory] = useState(product ? product.category : "");
+  const [discount, setDiscount] = useState(
+    product ? product.discount.discount : ""
+  );
 
   const handleChange1 = (e, { value }) => setModel(value);
   const handleChange2 = (e, { value }) => setBrand(value);
@@ -39,7 +46,7 @@ export default function AddProductForm() {
   const handleChange9 = (e, { value }) => setDiscount(value);
 
   const handleSubmit = () => {
-    const product = {
+    const newProduct = {
       model: model,
       brand: brand,
       description: description,
@@ -51,18 +58,22 @@ export default function AddProductForm() {
       discount: parseFloat(discount),
     };
 
-    addProduct(product);
+    if (product) {
+      updateProduct(product.id, newProduct);
+    } else addProduct(newProduct);
   };
 
   return (
     <Modal
       trigger={
         <Button primary fluid>
-          Add new Product
+          {product ? "Update Product" : "Add new Product"}
         </Button>
       }
     >
-      <Modal.Header>Add new Product</Modal.Header>
+      <Modal.Header>
+        {product ? "Update Product" : "Add new Product"}
+      </Modal.Header>
       <Modal.Content>
         <Form onSubmit={handleSubmit}>
           <Form.Group widths="equal">
@@ -150,7 +161,7 @@ export default function AddProductForm() {
               onChange={() => setInStock(false)}
             />
           </Form.Group>
-          <Button type="submit">Add</Button>
+          <Button type="submit">{product ? "Update" : "Add"}</Button>
         </Form>
       </Modal.Content>
     </Modal>

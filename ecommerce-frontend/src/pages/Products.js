@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 import { Grid, Card, Segment, Input } from "semantic-ui-react";
 
@@ -10,12 +11,19 @@ import Context from "../config/context";
 export default function Products() {
   const context = useContext(Context);
   const { user, products, getProducts } = context;
+  const location = useLocation();
+
+  // Access the query string using location.search
+  const search = new URLSearchParams(location.search);
+  const categoryQuery = search.get("category");
+  const modelQuery = search.get("model");
 
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(6);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    getProducts();
+    getProducts(categoryQuery, modelQuery);
   }, []);
 
   // Get current products
@@ -50,6 +58,23 @@ export default function Products() {
 
   const add = user ? user.role == "ADMIN" ? <AddProductForm /> : null : null;
 
+  const handleInputChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchClick = () => {
+    getProducts(categoryQuery, searchTerm);
+    setSearchTerm("");
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      console.log(searchTerm);
+      getProducts(categoryQuery, searchTerm);
+      setSearchTerm("");
+    }
+  };
+
   return (
     <>
       <Segment>
@@ -59,7 +84,15 @@ export default function Products() {
           </Grid.Column>
           <Grid.Column floated="right" width={5}>
             {add}
-            <Input icon="search" placeholder="Search..." fluid />
+            <Input
+              icon="search"
+              placeholder="Search..."
+              fluid
+              value={searchTerm}
+              onChange={handleInputChange}
+              onKeyPress={handleKeyPress}
+              onClick={handleSearchClick}
+            />
           </Grid.Column>
         </Grid>
       </Segment>

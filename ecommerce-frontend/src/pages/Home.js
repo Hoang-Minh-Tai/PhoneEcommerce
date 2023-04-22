@@ -1,4 +1,3 @@
-import heroImage from "../assets/hero-image.png";
 import React, { useContext, useState, useEffect } from "react";
 import { Grid, Card, Segment } from "semantic-ui-react";
 import Product from "../components/Product";
@@ -47,9 +46,9 @@ const Home = () => {
             </section>
           </div>
 
-          <div className="imageContainer">
+          {/* <div className="imageContainer">
             <img src={heroImage} alt="" />
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="productsBar">

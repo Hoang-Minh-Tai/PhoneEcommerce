@@ -16,6 +16,7 @@ import Login from "./pages/Login";
 import Signin from "./pages/Signin";
 import ShoppingCart from "./pages/ShoppingCart";
 import Orders from "./pages/Orders";
+import Voucher from "./pages/Voucher";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             <Route exact path="/signup" component={Signin} />
             <Route exact path="/cart" component={ShoppingCart} />
             <Route exact path="/orders" component={Orders} />
+            <Route exact path="/vouchers" component={Voucher} />
           </Container>
         </Switch>
       </Router>

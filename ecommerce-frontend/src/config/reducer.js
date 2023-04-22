@@ -10,7 +10,10 @@ import {
   GET_CURRENCY,
   GET_CART,
   UPDATE_CART,
+  UPDATE_CATEGORY,
+  UPDATE_PRODUCT,
   DELETE_ITEM,
+  DELETE_CATEGORY,
   UPDATE_ORDER,
   ADD_TO_CART,
 } from "./values";
@@ -81,6 +84,19 @@ export default (state, action) => {
           item.id === action.payload.id ? action.payload : item
         ),
       };
+    case UPDATE_CATEGORY:
+      return {
+        ...state,
+        categories: action.payload,
+      };
+
+    case UPDATE_PRODUCT:
+      return {
+        ...state,
+        products: state.categories.map((item) =>
+          item.id === action.payload.id ? action.payload : item
+        ),
+      };
 
     case DELETE_ITEM:
       const filteredArray = state.cart.filter(
@@ -89,6 +105,15 @@ export default (state, action) => {
       return {
         ...state,
         cart: filteredArray,
+      };
+
+    case DELETE_CATEGORY:
+      const filteredCategories = state.categories.filter(
+        (item) => item.id !== action.payload
+      );
+      return {
+        ...state,
+        categories: filteredCategories,
       };
 
     case GET_CATEGORIES:

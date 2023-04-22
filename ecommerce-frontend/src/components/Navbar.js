@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Menu, Image } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import logo from "../assets/coffe-delivery-logo.svg";
+// import logo from "assets/coffe-delivery-logo.svg";
 import Context from "../config/context";
 
 export default function Navbar() {
@@ -50,11 +50,11 @@ export default function Navbar() {
   return (
     <>
       <Menu pointing secondary size="massive" color="red">
-        <Menu.Item>
+        {/* <Menu.Item>
           <NavLink to="/">
             <Image src={logo} alt="Logo" size="mini" />
           </NavLink>
-        </Menu.Item>
+        </Menu.Item> */}
         <Menu.Item
           name="home"
           active={activeItem === "home"}
@@ -88,13 +88,22 @@ export default function Navbar() {
           </>
         )}
         {user && user.role === "ADMIN" && (
-          <Menu.Item
-            name="orders"
-            active={activeItem === "orders"}
-            onClick={handleItemClick}
-            as={Link}
-            to="/orders"
-          ></Menu.Item>
+          <>
+            <Menu.Item
+              name="orders"
+              active={activeItem === "orders"}
+              onClick={handleItemClick}
+              as={Link}
+              to="/orders"
+            ></Menu.Item>
+            <Menu.Item
+              name="orders"
+              active={activeItem === "orders"}
+              onClick={handleItemClick}
+              as={Link}
+              to="/orders"
+            ></Menu.Item>
+          </>
         )}
         {userInfo}
       </Menu>

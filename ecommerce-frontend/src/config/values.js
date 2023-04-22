@@ -16,5 +16,9 @@ export const GET_ORDERS = "GET_ORDERS";
 
 export const UPDATE_CART = "UPDATE_CART";
 export const UPDATE_ORDER = "UPDATE_ORDER";
+export const UPDATE_CATEGORY = "UPDATE_CATEGORY";
+export const UPDATE_PRODUCT = "UPDATE_PRODUCT";
 
 export const DELETE_ITEM = "DELETE_ITEM";
+export const DELETE_CATEGORY = "DELETE_CATEGORY";
+export const DELETE_PRODUCT = "DELETE_PRODUCT";

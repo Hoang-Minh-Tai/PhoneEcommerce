@@ -23,8 +23,12 @@ import {
   GET_CART,
   ADD_TO_CART,
   UPDATE_CART,
+  UPDATE_CATEGORY,
   UPDATE_ORDER,
+  UPDATE_PRODUCT,
   DELETE_ITEM,
+  DELETE_CATEGORY,
+  DELETE_PRODUCT,
 } from "./values";
 
 const Context = (props) => {
@@ -181,8 +185,13 @@ const Context = (props) => {
     });
   };
 
-  const getProducts = async () => {
-    const res = await axiosClient.get("/products/all");
+  const getProducts = async (category, model) => {
+    const params = {
+      category,
+      model,
+    };
+
+    const res = await axiosClient.get("/products/all", { params });
 
     dispatch({
       type: GET_PRODUCTS,
@@ -252,6 +261,51 @@ const Context = (props) => {
     });
   };
 
+  const updateCategory = async (id, category) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log("category to update", category);
+
+    try {
+      const res = await axiosClient.put(
+        "/categories/update/" + id,
+        { ...category },
+        {
+          headers: {
+            Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+          },
+        }
+      );
+
+      console.log("Request payload:", { category });
+      console.log("Response:", res.data);
+      dispatch({
+        type: UPDATE_CATEGORY,
+        payload: res.data,
+      });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  const updateProduct = async (id, product) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const res = await axiosClient.put(
+      "/products/update/" + id,
+      { product },
+      {
+        headers: {
+          Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+        },
+      }
+    );
+
+    dispatch({
+      type: UPDATE_PRODUCT,
+      payload: res.data,
+    });
+  };
+
   const updateOrder = async (id, status) => {
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -286,6 +340,36 @@ const Context = (props) => {
     });
   };
 
+  const deleteCategory = async (id) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const res = await axiosClient.delete("/categories/delete/" + id, {
+      headers: {
+        Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+      },
+    });
+
+    dispatch({
+      type: DELETE_CATEGORY,
+      payload: id,
+    });
+  };
+
+  const deleteProduct = async (id) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const res = await axiosClient.delete("/products/delete/" + id, {
+      headers: {
+        Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+      },
+    });
+
+    dispatch({
+      type: DELETE_PRODUCT,
+      payload: id,
+    });
+  };
+
   return (
     <userContext.Provider
       value={{
@@ -308,7 +392,11 @@ const Context = (props) => {
         getCurrency,
         getOrders,
         updateCart,
+        updateCategory,
         deleteCartItem,
+        updateProduct,
+        deleteCategory,
+        deleteProduct,
         updateOrder,
       }}
     >

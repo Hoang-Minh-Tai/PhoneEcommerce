@@ -15,6 +15,8 @@ import Context from "../config/context";
 export default function Cart(props) {
   const { cart, deleteCartItem, updateCart, getCart } = useContext(Context);
 
+  const [voucherCode, setVoucherCode] = useState("");
+
   useEffect(() => {
     getCart();
   }, []);
@@ -71,6 +73,15 @@ export default function Cart(props) {
       }, 0)
     : 0;
 
+  const handleVoucherCodeChange = (event) => {
+    setVoucherCode(event.target.value);
+  };
+
+  const handleApplyVoucherCode = () => {
+    // TODO: implement voucher code logic
+    console.log(`Voucher code ${voucherCode} applied`);
+  };
+
   return (
     <Container>
       <Header as="h2" textAlign="center">
@@ -87,6 +98,17 @@ export default function Cart(props) {
         </Header>
       </Container>
       <Container textAlign="center">
+        <Input
+          placeholder="Enter voucher code"
+          value={voucherCode}
+          onChange={handleVoucherCodeChange}
+          style={{ marginRight: "10px" }}
+        />
+        <Button color="teal" onClick={handleApplyVoucherCode}>
+          Apply Voucher Code
+        </Button>
+        <br />
+        <br />
         <Button color="teal" onClick={handleCheckout}>
           Process Checkout
         </Button>

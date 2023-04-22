@@ -65,7 +65,7 @@ export default function Categories() {
       </Segment>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <div className="category-wrapper">
-          <Card.Group fluid itemsPerRow="3">
+          <Card.Group fluid itemsPerRow="2">
             {views}
           </Card.Group>
           <br />

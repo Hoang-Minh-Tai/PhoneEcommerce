@@ -2,6 +2,8 @@ package com.springbootecommerce.controller;
 
 import java.util.List;
 
+import com.springbootecommerce.dto.UpdateCategoryDto;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -52,12 +54,12 @@ public class CategoryController {
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public List<Category> updateCategory(@PathVariable long id, @RequestBody Category category) {
-        if (categoryRepository.existsById(id)) {
-            category.setId(id);
-            categoryRepository.save(category);
-        }
-
+    public List<Category> updateCategory(@PathVariable long id, @RequestBody UpdateCategoryDto updateCategoryDto) {
+        Category category = categoryRepository.findById(id).orElseThrow();
+        if (updateCategoryDto.getName() != null) category.setName(updateCategoryDto.getName());
+        if (updateCategoryDto.getDescription() != null) category.setDescription(updateCategoryDto.getDescription());
+        if (updateCategoryDto.getPicture() != null) category.setPicture(updateCategoryDto.getPicture());
+        categoryRepository.save(category);
         return categoryRepository.findAll();
     }
 }
