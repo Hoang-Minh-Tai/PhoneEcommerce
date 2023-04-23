@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.springbootecommerce.dto.CreateProductDto;
+import com.springbootecommerce.dto.UpdateProductDto;
 import com.springbootecommerce.model.Discount;
 import com.springbootecommerce.repository.CategoryRepository;
 import com.springbootecommerce.repository.DiscountRepository;
@@ -102,14 +103,10 @@ public class ProductController {
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Product> updateProduct(@PathVariable(value = "id") Long productId,
-                                                 @RequestBody Product productDetails) {
+    public List<Product> updateProduct(@PathVariable(value = "id") Long productId,
+                                                 @RequestBody UpdateProductDto productDetails) {
 
         Optional<Product> product = productRepository.findById(productId);
-
-        if (!product.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
 
         if (productDetails.getBrand() != null) {
             product.get().setBrand(productDetails.getBrand());
@@ -139,11 +136,12 @@ public class ProductController {
             product.get().setInStock(productDetails.isInStock());
         }
 
-        if (productDetails.getCategory() != null) {
-            product.get().setCategory(productDetails.getCategory());
+        if (productDetails.getCategoryId() != null) {
+            Category category = categoryRepository.findById(productDetails.getCategoryId()).orElse(null);
+            product.get().setCategory(category);
         }
 
-        Product updatedProduct = productRepository.save(product.get());
-        return ResponseEntity.ok(updatedProduct);
+        productRepository.save(product.get());
+        return productRepository.findAll();
     }
 }

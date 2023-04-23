@@ -20,7 +20,7 @@ export default function AddCategoryForm(props) {
   const handleChange2 = (e, { value }) => setPicture(value);
   const handleChange3 = (e, { value }) => setDescription(value);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newCategory = {
       name: name,
       picture: picture,
@@ -28,8 +28,11 @@ export default function AddCategoryForm(props) {
     };
 
     if (category) {
-      updateCategory(category.id, newCategory);
-    } else addCategory(newCategory);
+      await updateCategory(category.id, newCategory);
+      alert("Update category sucessfully!");
+    } else {
+      addCategory(newCategory);
+    }
 
     setIsOpen(false); // Close the modal after submitting
   };
@@ -73,10 +76,6 @@ export default function AddCategoryForm(props) {
             value={description}
             required
           />
-          <Form.Field>
-            <label>Upload Image</label>
-            <input type="file" accept="image/*" />
-          </Form.Field>
           <Button type="submit"> {category ? "Update" : "Add"}</Button>
         </Form>
       </Modal.Content>

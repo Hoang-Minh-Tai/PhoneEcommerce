@@ -30,7 +30,7 @@ export default function AddProductForm(props) {
     product ? product.memoryVersion : ""
   );
   const [inStock, setInStock] = useState(product ? product.inStock : "");
-  const [category, setCategory] = useState(product ? product.category : "");
+  const [category, setCategory] = useState(product ? product.category.id : "");
   const [discount, setDiscount] = useState(
     product ? product.discount.discount : ""
   );
@@ -45,7 +45,7 @@ export default function AddProductForm(props) {
   const handleChange8 = (e, { value }) => setCategory(value);
   const handleChange9 = (e, { value }) => setDiscount(value);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newProduct = {
       model: model,
       brand: brand,
@@ -59,14 +59,22 @@ export default function AddProductForm(props) {
     };
 
     if (product) {
-      updateProduct(product.id, newProduct);
-    } else addProduct(newProduct);
+      await updateProduct(product.id, newProduct);
+      alert("Update product successfully!");
+    } else {
+      await addProduct(newProduct);
+      alert("Add product successfully!");
+    }
   };
 
   return (
     <Modal
       trigger={
-        <Button primary fluid>
+        <Button
+          primary
+          fluid={props.size ? false : true}
+          size={props.size || "large"}
+        >
           {product ? "Update Product" : "Add new Product"}
         </Button>
       }
@@ -101,7 +109,7 @@ export default function AddProductForm(props) {
               selection
               options={listCategories}
               onChange={handleChange8}
-              value={category.value}
+              value={category.id}
             />
           </Form.Field>
           <Form.Input

@@ -7,16 +7,20 @@ export default function ShoppingCart() {
   const { addOrder } = useContext(Context);
   const [showCart, setShowCart] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [voucher, setVoucher] = useState(null);
 
   const handlePayment = (paymentType) => {
-    console.log("he pays, he pays");
-    addOrder(paymentType);
+    addOrder(paymentType, voucher.code);
   };
 
   return (
     <>
       {showCart ? (
-        <Cart setTotalPrice={setTotalPrice} checkout={setShowCart}></Cart>
+        <Cart
+          setTotalPrice={setTotalPrice}
+          checkout={setShowCart}
+          setVoucher={setVoucher}
+        ></Cart>
       ) : (
         <PaymentForm
           totalPrice={totalPrice}

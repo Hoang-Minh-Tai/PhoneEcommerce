@@ -33,6 +33,8 @@ public class OrderController {
     private DiscountRepository discountRepository;
     @Autowired
     private OrderProductRepository orderProductRepository;
+    @Autowired
+    private VoucherRepository voucherRepository;
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/all")
@@ -51,6 +53,7 @@ public class OrderController {
     public Order addOrder(Authentication authentication, @RequestBody CreateOrderDto createOrderDto) {
         String username = authentication.getName();
         User user = userRepository.findByUsername(username);
+        Voucher voucher = voucherRepository.findByCode(createOrderDto.getVoucherCode());
 
         // Find all shopping cart items in the user's shopping cart
         List<ShoppingCartItem> cartItems = shoppingCartItemRepository.findByUser(user);
@@ -59,6 +62,7 @@ public class OrderController {
         order.setOrderDate(new Date());
         order.setStatus(OrderStatus.PENDING);
         order.setPaymentType(createOrderDto.getPaymentType());
+        order.setVoucher(voucher);
 
         Set<OrderProduct> productList = new HashSet<>();
         double totalPrice = 0;
@@ -80,6 +84,7 @@ public class OrderController {
             productList.add(orderProduct);
             orderProductRepository.save(orderProduct);
         }
+        totalPrice = totalPrice * (100 - voucher.getDiscount()) / 100;
         order.setProducts(productList);
         order.setTotalPrice(totalPrice);
         orderRepository.save(order);

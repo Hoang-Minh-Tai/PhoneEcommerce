@@ -97,11 +97,11 @@ export default function Navbar() {
               to="/orders"
             ></Menu.Item>
             <Menu.Item
-              name="orders"
-              active={activeItem === "orders"}
+              name="vouchers"
+              active={activeItem === "vouchers"}
               onClick={handleItemClick}
               as={Link}
-              to="/orders"
+              to="/vouchers"
             ></Menu.Item>
           </>
         )}

@@ -32,6 +32,12 @@ export default function OrderDetails({ order, close }) {
         <p>
           <strong>Order Status: </strong> {order.status}
         </p>
+        <p>
+          <strong>Order Voucher: </strong>{" "}
+          {order.voucher
+            ? order.voucher.code + "(" + order.voucher.discount + "%)"
+            : "null"}
+        </p>
         <h3>Products:</h3>
         <Table>
           <Table.Header>

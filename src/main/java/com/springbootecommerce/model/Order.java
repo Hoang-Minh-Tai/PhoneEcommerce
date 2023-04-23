@@ -32,6 +32,9 @@ public class Order {
     @Column()
     private OrderStatus status;
 
+    @ManyToOne()
+    private Voucher voucher;
+
     @Enumerated(EnumType.STRING)
     @Column()
     private PaymentType paymentType;
@@ -43,13 +46,14 @@ public class Order {
         // Default constructor for JPA
     }
 
-    public Order(Date orderDate, double totalPrice, Set<OrderProduct> products, User user, OrderStatus status, PaymentType paymentType) {
+    public Order(Date orderDate, double totalPrice, Set<OrderProduct> products, User user, OrderStatus status, PaymentType paymentType, Voucher voucher) {
         this.orderDate = orderDate;
         this.totalPrice = totalPrice;
         this.products = products;
         this.user = user;
         this.status = status;
         this.paymentType = paymentType;
+        this.voucher = voucher;
     }
 
     public Long getId() {
@@ -102,5 +106,13 @@ public class Order {
 
     public void setPaymentType(PaymentType paymentType) {
         this.paymentType = paymentType;
+    }
+
+    public Voucher getVoucher() {
+        return voucher;
+    }
+
+    public void setVoucher(Voucher voucher) {
+        this.voucher = voucher;
     }
 }

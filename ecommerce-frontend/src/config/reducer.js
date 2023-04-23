@@ -16,6 +16,11 @@ import {
   DELETE_CATEGORY,
   UPDATE_ORDER,
   ADD_TO_CART,
+  DELETE_PRODUCT,
+  GET_VOUCHERS,
+  DELETE_VOUCHER,
+  UPDATE_VOUCHER,
+  POST_VOUCHER,
 } from "./values";
 
 export default (state, action) => {
@@ -46,6 +51,11 @@ export default (state, action) => {
         ...state,
         products: action.payload,
       };
+    case POST_VOUCHER:
+      return {
+        ...state,
+        vouchers: action.payload,
+      };
     case GET_USER:
       return {
         ...state,
@@ -55,6 +65,12 @@ export default (state, action) => {
       return {
         ...state,
         products: action.payload,
+      };
+
+    case GET_VOUCHERS:
+      return {
+        ...state,
+        vouchers: action.payload,
       };
 
     case GET_CART:
@@ -93,9 +109,13 @@ export default (state, action) => {
     case UPDATE_PRODUCT:
       return {
         ...state,
-        products: state.categories.map((item) =>
-          item.id === action.payload.id ? action.payload : item
-        ),
+        products: action.payload,
+      };
+
+    case UPDATE_VOUCHER:
+      return {
+        ...state,
+        vouchers: action.payload,
       };
 
     case DELETE_ITEM:
@@ -114,6 +134,18 @@ export default (state, action) => {
       return {
         ...state,
         categories: filteredCategories,
+      };
+
+    case DELETE_PRODUCT:
+      return {
+        ...state,
+        products: action.payload,
+      };
+
+    case DELETE_VOUCHER:
+      return {
+        ...state,
+        vouchers: action.payload,
       };
 
     case GET_CATEGORIES:

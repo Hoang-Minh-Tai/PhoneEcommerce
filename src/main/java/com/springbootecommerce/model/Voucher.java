@@ -15,7 +15,7 @@ public class Voucher {
     private String code;
 
     @Column(name = "discount")
-    private double discount;
+    private int discount;
 
     @Column(name = "expiration_date")
     private Date expirationDate;
@@ -24,7 +24,7 @@ public class Voucher {
 
     public Voucher() {}
 
-    public Voucher(String code, double discount, Date expirationDate) {
+    public Voucher(String code, int discount, Date expirationDate) {
         this.code = code;
         this.discount = discount;
         this.expirationDate = expirationDate;
@@ -46,11 +46,11 @@ public class Voucher {
         this.code = code;
     }
 
-    public double getDiscount() {
+    public int getDiscount() {
         return discount;
     }
 
-    public void setDiscount(double discount) {
+    public void setDiscount(int discount) {
         this.discount = discount;
     }
 

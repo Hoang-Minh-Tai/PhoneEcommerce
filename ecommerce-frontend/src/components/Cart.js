@@ -13,16 +13,19 @@ import {
 import Context from "../config/context";
 
 export default function Cart(props) {
-  const { cart, deleteCartItem, updateCart, getCart } = useContext(Context);
+  const { cart, deleteCartItem, updateCart, getCart, getOneVoucher } =
+    useContext(Context);
 
   const [voucherCode, setVoucherCode] = useState("");
+  const [voucher, setVoucher] = useState(null);
 
   useEffect(() => {
     getCart();
   }, []);
 
   const handleCheckout = () => {
-    props.setTotalPrice(totalPrice);
+    props.setTotalPrice(totalPrice - discountAmount);
+    props.setVoucher(voucher);
     props.checkout(false);
   };
 
@@ -62,7 +65,7 @@ export default function Cart(props) {
       })
     : null;
 
-  const totalPrice = cart
+  let totalPrice = cart
     ? cart.reduce((accumulator, item) => {
         return (
           accumulator +
@@ -73,13 +76,14 @@ export default function Cart(props) {
       }, 0)
     : 0;
 
+  const discountAmount = voucher ? (totalPrice * voucher.discount) / 100 : 0;
   const handleVoucherCodeChange = (event) => {
     setVoucherCode(event.target.value);
   };
 
-  const handleApplyVoucherCode = () => {
-    // TODO: implement voucher code logic
-    console.log(`Voucher code ${voucherCode} applied`);
+  const handleApplyVoucherCode = async () => {
+    const voucher = await getOneVoucher(voucherCode);
+    setVoucher(voucher);
   };
 
   return (
@@ -94,7 +98,8 @@ export default function Cart(props) {
       </Segment>
       <Container textAlign="right">
         <Header as="h3">
-          Total: <Icon name="dollar sign" /> {totalPrice.toFixed(2)}
+          Total: <Icon name="dollar sign" />{" "}
+          {(totalPrice - discountAmount).toFixed(2)}
         </Header>
       </Container>
       <Container textAlign="center">
@@ -107,7 +112,14 @@ export default function Cart(props) {
         <Button color="teal" onClick={handleApplyVoucherCode}>
           Apply Voucher Code
         </Button>
-        <br />
+        {discountAmount > 0 && (
+          <div style={{ color: "green", marginTop: "10px" }}>
+            Voucher applied. Discount amount: <Icon name="dollar sign" />
+            {discountAmount.toFixed(2)}. Total price:{" "}
+            <Icon name="dollar sign" />
+            {(totalPrice - discountAmount).toFixed(2)}
+          </div>
+        )}
         <br />
         <Button color="teal" onClick={handleCheckout}>
           Process Checkout

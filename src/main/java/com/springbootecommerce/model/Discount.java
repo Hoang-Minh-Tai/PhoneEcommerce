@@ -14,7 +14,7 @@ public class Discount {
     private Long id;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;
 

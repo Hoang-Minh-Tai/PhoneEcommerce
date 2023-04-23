@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping("/api/vouchers")
 public class VoucherController {
 
@@ -19,23 +18,29 @@ public class VoucherController {
     private VoucherRepository voucherRepository;
 
     @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<Voucher> getAllVouchers() {
         return voucherRepository.findAll();
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<Voucher> getVoucherById(@PathVariable(value = "id") Long voucherId) throws NotFoundException {
-        Voucher voucher = voucherRepository.findById(voucherId)
-                .orElseThrow(() -> new NotFoundException("Voucher not found with id: " + voucherId));
+    @GetMapping("/get/{code}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Voucher> getVoucherByCode(@PathVariable(value = "code") String voucherCode) throws NotFoundException {
+        Voucher voucher = voucherRepository.findByCode(voucherCode)
+                ;
         return ResponseEntity.ok(voucher);
     }
 
+
     @PostMapping("/add")
-    public Voucher createVoucher(@RequestBody Voucher voucher) {
-        return voucherRepository.save(voucher);
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<Voucher> createVoucher(@RequestBody Voucher voucher) {
+        voucherRepository.save(voucher);
+        return voucherRepository.findAll();
     }
 
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Voucher> updateVoucher(@PathVariable(value = "id") Long voucherId,
                                                  @RequestBody Voucher voucherDetails) throws NotFoundException {
         Voucher voucher = voucherRepository.findById(voucherId)
@@ -50,11 +55,12 @@ public class VoucherController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteVoucher(@PathVariable(value = "id") Long voucherId) throws NotFoundException {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<Voucher> deleteVoucher(@PathVariable(value = "id") Long voucherId) throws NotFoundException {
         Voucher voucher = voucherRepository.findById(voucherId)
                 .orElseThrow(() -> new NotFoundException("Voucher not found with id: " + voucherId));
 
         voucherRepository.delete(voucher);
-        return ResponseEntity.noContent().build();
+        return voucherRepository.findAll();
     }
 }

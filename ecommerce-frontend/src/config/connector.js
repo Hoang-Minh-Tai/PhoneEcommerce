@@ -29,6 +29,11 @@ import {
   DELETE_ITEM,
   DELETE_CATEGORY,
   DELETE_PRODUCT,
+  POST_VOUCHER,
+  GET_VOUCHERS,
+  UPDATE_VOUCHER,
+  DELETE_VOUCHER,
+  GET_ONE_VOUCHER,
 } from "./values";
 
 const Context = (props) => {
@@ -39,6 +44,7 @@ const Context = (props) => {
     categories: [],
     cart: [],
     orders: [],
+    vouchers: [],
   };
 
   const userFromStorage = localStorage.getItem("user");
@@ -113,12 +119,12 @@ const Context = (props) => {
     }
   };
 
-  const addOrder = async (paymentType) => {
+  const addOrder = async (paymentType, voucherCode) => {
     const user = JSON.parse(localStorage.getItem("user"));
     try {
       const res = await axiosClient.post(
         "/orders/add",
-        { paymentType },
+        { paymentType, voucherCode },
         {
           headers: {
             Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
@@ -129,6 +135,41 @@ const Context = (props) => {
         type: POST_ORDER,
         payload: res.data,
       });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  const addVoucher = async (voucher) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    try {
+      const res = await axiosClient.post("/vouchers/add", voucher, {
+        headers: {
+          Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+        },
+      });
+      dispatch({
+        type: POST_VOUCHER,
+        payload: res.data,
+      });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  const getOneVoucher = async (code) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    try {
+      const res = await axiosClient.get("/vouchers/get/" + code, {
+        headers: {
+          Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+        },
+      });
+      dispatch({
+        type: GET_ONE_VOUCHER,
+        payload: res.data,
+      });
+      return res.data;
     } catch (error) {
       console.log(error.response.data);
     }
@@ -233,6 +274,23 @@ const Context = (props) => {
     return res.data;
   };
 
+  const getVouchers = async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const res = await axiosClient.get("/vouchers/all", {
+      headers: {
+        Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+      },
+    });
+
+    dispatch({
+      type: GET_VOUCHERS,
+      payload: res.data,
+    });
+
+    return res.data;
+  };
+
   const clearUser = async () => {
     localStorage.clear();
 
@@ -275,9 +333,6 @@ const Context = (props) => {
           },
         }
       );
-
-      console.log("Request payload:", { category });
-      console.log("Response:", res.data);
       dispatch({
         type: UPDATE_CATEGORY,
         payload: res.data,
@@ -290,18 +345,29 @@ const Context = (props) => {
   const updateProduct = async (id, product) => {
     const user = JSON.parse(localStorage.getItem("user"));
 
-    const res = await axiosClient.put(
-      "/products/update/" + id,
-      { product },
-      {
-        headers: {
-          Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
-        },
-      }
-    );
+    const res = await axiosClient.put("/products/update/" + id, product, {
+      headers: {
+        Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+      },
+    });
 
     dispatch({
       type: UPDATE_PRODUCT,
+      payload: res.data,
+    });
+  };
+
+  const updateVoucher = async (id, voucher) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const res = await axiosClient.put("/vouchers/update/" + id, voucher, {
+      headers: {
+        Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+      },
+    });
+
+    dispatch({
+      type: UPDATE_VOUCHER,
       payload: res.data,
     });
   };
@@ -366,7 +432,21 @@ const Context = (props) => {
 
     dispatch({
       type: DELETE_PRODUCT,
-      payload: id,
+      payload: res.data,
+    });
+  };
+  const deleteVoucher = async (id) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const res = await axiosClient.delete("/vouchers/delete/" + id, {
+      headers: {
+        Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+      },
+    });
+
+    dispatch({
+      type: DELETE_VOUCHER,
+      payload: res.data,
     });
   };
 
@@ -379,6 +459,7 @@ const Context = (props) => {
         categories: state.categories,
         products: state.products,
         orders: state.orders,
+        vouchers: state.vouchers,
         addUser,
         addToCart,
         addCategory,
@@ -386,6 +467,11 @@ const Context = (props) => {
         addOrder,
         getUser,
         getCart,
+        addVoucher,
+        getOneVoucher,
+        getVouchers,
+        updateVoucher,
+        deleteVoucher,
         clearUser,
         getCategories,
         getProducts,
