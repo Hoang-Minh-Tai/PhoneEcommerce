@@ -1,4 +1,4 @@
-# Simple eCommerce Application with SpringBoot and React
+# Phone eCommerce Application with SpringBoot and React
 
 This example app shows a simple eCommerce Application with Spring Boot API and CRUD (create, read, update, and delete) its data with a React app.
 
@@ -21,7 +21,7 @@ This example app shows a simple eCommerce Application with Spring Boot API and C
 To install this application, run the following commands:
 
 ```bash
-git clone https://github.com/devRobots/spring-boot-ecommerce.git spring-boot-ecommerce
+git clone https://github.com/Hoang-Minh-Tai/PhoneEcommerce.git
 cd spring-boot-ecommerce
 ```
 
@@ -59,15 +59,21 @@ Before continuing you must create the user `admin`, in order to perform administ
 
 ```SQL
 USE ecommerce;
-INSERT INTO user (username, email, is_admin, password) values ('{admin.username}', '{admin.email}', true, '{admin.password}');
+INSERT INTO user (email, gender, password, role, username)
+VALUES ('{youremail}', 'MALE', SHA2('yourpassword', 256),  'ADMIN', 'yourusername');
 ```
 
 ### Run Frontend Client
-
-Now you can run the frondent client to use the web application. To run the client, run:
+First your need to install the required packages for the frontend
 
 ```bash
 cd ecommerce-frontend
+npm install
+````
+
+Now you can run the frontend client to use the web application. To run the client, run:
+
+```bash
 npm start
 ```
 
