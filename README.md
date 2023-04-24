@@ -22,7 +22,7 @@ To install this application, run the following commands:
 
 ```bash
 git clone https://github.com/Hoang-Minh-Tai/PhoneEcommerce.git
-cd spring-boot-ecommerce
+cd PhoneEcommerce
 ```
 
 This will get a copy of the project installed locally. To configure all of its dependencies and start each app, follow the instructions below.
@@ -55,14 +55,11 @@ Now you can run the server which generates the database tables. To run the serve
 
 ### Create admin user
 
-Before continuing you must create the user `admin`, in order to perform administrator operations in the application. For this you must create a user on the MySQL monitor with the following command.
-
-```SQL
-USE ecommerce;
-INSERT INTO user (email, gender, password, role, username)
-VALUES ('{youremail}', 'MALE', SHA2('yourpassword', 256),  'ADMIN', 'yourusername');
+The application creates a default admin account.
 ```
-
+username = "admin"
+password = "password"
+```
 ### Run Frontend Client
 First your need to install the required packages for the frontend
 
@@ -73,7 +70,7 @@ npm install
 
 Now you can run the frontend client to use the web application. To run the client, run:
 
-```bash
+```bashart
 npm start
 ```
 
