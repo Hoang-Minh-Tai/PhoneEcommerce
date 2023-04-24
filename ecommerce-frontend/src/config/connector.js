@@ -119,18 +119,16 @@ const Context = (props) => {
     }
   };
 
-  const addOrder = async (paymentType, voucherCode) => {
+  const addOrder = async (paymentType, voucher) => {
+    const payload = { paymentType };
+    if (voucher) payload.voucherCode = voucher.code;
     const user = JSON.parse(localStorage.getItem("user"));
     try {
-      const res = await axiosClient.post(
-        "/orders/add",
-        { paymentType, voucherCode },
-        {
-          headers: {
-            Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
-          },
-        }
-      );
+      const res = await axiosClient.post("/orders/add", payload, {
+        headers: {
+          Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+        },
+      });
       dispatch({
         type: POST_ORDER,
         payload: res.data,
@@ -177,21 +175,28 @@ const Context = (props) => {
 
   const addToCart = async (productId, quantity) => {
     const user = JSON.parse(localStorage.getItem("user"));
+    let res;
+    try {
+      res = await axiosClient.post(
+          "/cart/add",
+          {productId, quantity},
+          {
+            headers: {
+              Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+            },
+          }
+      );
 
-    const res = await axiosClient.post(
-      "/cart/add",
-      { productId, quantity },
-      {
-        headers: {
-          Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
-        },
-      }
-    );
-
-    dispatch({
-      type: ADD_TO_CART,
-      payload: res.data,
-    });
+      dispatch({
+        type: ADD_TO_CART,
+        payload: res.data,
+      });
+      return 201
+    }
+    catch (error) {
+      console.log(error.response.data);
+      return 400
+    }
   };
 
   // POST Methods

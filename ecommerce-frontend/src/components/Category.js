@@ -1,12 +1,14 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Card, Image, Label, Button } from "semantic-ui-react";
 import ImageResizer from "react-image-resizer";
 import Context from "../config/context";
 import AddCategoryForm from "./AddCategoryForm";
 import { Link } from "react-router-dom";
+import ConfirmDelete from "./ConfirmationBox";
 
 export default function Category(props) {
   const { user, deleteCategory } = useContext(Context);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const pic = props.category.picture
     ? props.category.picture
@@ -20,11 +22,21 @@ export default function Category(props) {
           fluid
           color="red"
           onClick={() => {
-            deleteCategory(props.category.id);
+            setDeleteModalOpen(true);
           }}
         >
           Delete
         </Button>
+        <ConfirmDelete
+          open={deleteModalOpen}
+          name={props.category.name}
+          onDelete={async () => {
+            await deleteCategory(props.category.id);
+            alert("delete category successfully!");
+            setDeleteModalOpen(false);
+          }}
+          onClose={() => setDeleteModalOpen(false)}
+        />
       </>
     ) : null
   ) : null;

@@ -19,20 +19,21 @@ export default function AddProductForm(props) {
     value: category.id,
   }));
 
+  const [modalOpen, setModalOpen] = useState(false);
   const [model, setModel] = useState(product ? product.model : "");
   const [brand, setBrand] = useState(product ? product.brand : "");
   const [description, setDescription] = useState(
     product ? product.description : ""
   );
-  const [price, setPrice] = useState(product ? product.price : "");
+  const [price, setPrice] = useState(product ? product.price : 0);
   const [imageUrl, setImageUrl] = useState(product ? product.imageUrl : "");
   const [memoryVersion, setMemoryVersion] = useState(
     product ? product.memoryVersion : ""
   );
-  const [inStock, setInStock] = useState(product ? product.inStock : "");
-  const [category, setCategory] = useState(product ? product.category.id : "");
+  const [inStock, setInStock] = useState(product ? product.inStock : true);
+  const [category, setCategory] = useState(product ? product.category : "");
   const [discount, setDiscount] = useState(
-    product ? product.discount.discount : ""
+    product ? product.discount.discount : 0
   );
 
   const handleChange1 = (e, { value }) => setModel(value);
@@ -58,11 +59,15 @@ export default function AddProductForm(props) {
       discount: parseFloat(discount),
     };
 
+    console.log("category value", category);
+
     if (product) {
       await updateProduct(product.id, newProduct);
+      setModalOpen(false);
       alert("Update product successfully!");
     } else {
       await addProduct(newProduct);
+      setModalOpen(false);
       alert("Add product successfully!");
     }
   };
@@ -74,10 +79,12 @@ export default function AddProductForm(props) {
           primary
           fluid={props.size ? false : true}
           size={props.size || "large"}
+          onClick={() => setModalOpen(true)}
         >
           {product ? "Update Product" : "Add new Product"}
         </Button>
       }
+      open={modalOpen}
     >
       <Modal.Header>
         {product ? "Update Product" : "Add new Product"}
@@ -91,6 +98,7 @@ export default function AddProductForm(props) {
               placeholder="Product model"
               onChange={handleChange1}
               value={model}
+              required
             />
             <Form.Input
               name="brand"
@@ -98,6 +106,7 @@ export default function AddProductForm(props) {
               placeholder="Product brand"
               onChange={handleChange2}
               value={brand}
+              required
             />
           </Form.Group>
           <Form.Field>
@@ -110,6 +119,7 @@ export default function AddProductForm(props) {
               options={listCategories}
               onChange={handleChange8}
               value={category.id}
+              required
             />
           </Form.Field>
           <Form.Input
@@ -118,6 +128,7 @@ export default function AddProductForm(props) {
             placeholder="Product description"
             onChange={handleChange3}
             value={description}
+            required
           />
           <Form.Input
             name="discount"
@@ -136,6 +147,7 @@ export default function AddProductForm(props) {
               placeholder="Price (USD)"
               onChange={handleChange4}
               value={price}
+              required
             />
             <Form.Input
               name="imageUrl"
@@ -143,6 +155,7 @@ export default function AddProductForm(props) {
               placeholder="Image URL"
               onChange={handleChange5}
               value={imageUrl}
+              required
             />
           </Form.Group>
           <Form.Input
@@ -151,6 +164,7 @@ export default function AddProductForm(props) {
             placeholder="Memory Version"
             onChange={handleChange6}
             value={memoryVersion}
+            required
           />
           <Form.Group inline>
             <label>In Stock:</label>

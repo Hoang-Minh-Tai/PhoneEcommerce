@@ -10,7 +10,7 @@ export default function ShoppingCart() {
   const [voucher, setVoucher] = useState(null);
 
   const handlePayment = (paymentType) => {
-    addOrder(paymentType, voucher.code);
+    addOrder(paymentType, voucher);
   };
 
   return (

@@ -36,7 +36,9 @@ export default function Products() {
 
   const views =
     products.length > 0 ? (
-      currentProducts.map((product, index) => <Product product={product} />)
+      currentProducts.map((product, index) => (
+        <Product product={product} key={product.id} />
+      ))
     ) : (
       <Card>
         <Card.Content>

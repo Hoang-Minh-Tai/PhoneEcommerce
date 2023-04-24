@@ -1,5 +1,10 @@
 import React, { useContext, useState } from "react";
-import { Card, Image, Header, Label, Button, Modal } from "semantic-ui-react";
+import {
+  Message,
+
+  Button,
+
+} from "semantic-ui-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
 import ImageResizer from "react-image-resizer";
@@ -7,11 +12,12 @@ import Context from "../config/context";
 import AddProductForm from "./AddProductForm";
 
 export default function ProductDetail(props) {
-  const { product, setModalOpen } = props;
+  const { product, setModalOpen, setDeleteModalOpen } = props;
   const discount = product.discount ? product.discount.discount : 0;
-  const { user, addToCart, updateProduct, deleteProduct } = useContext(Context);
+  const { user, addToCart } = useContext(Context);
   const [quantity, setQuantity] = useState(1);
   const [message, setMessage] = useState("");
+  const [resStatus, setResStatus] = useState(0);
   const handleQuantityChange = (event) => {
     setQuantity(parseInt(event.target.value)); // Update quantity state with selected value
   };
@@ -21,20 +27,15 @@ export default function ProductDetail(props) {
     : "https://media.idownloadblog.com/wp-content/uploads/2022/09/iPhone-14-and-iPhone-14-pro-wallpaper-idownloadblog-mock-up.png";
 
   const handleAddToCart = async () => {
-    // Implement logic to add product to cart with selected quantity
-    // You can use the "quantity" state value in this function
-    console.log("Product ID:", product.id);
-    console.log("Quantity:", quantity);
     const res_add_card = await addToCart(product.id, quantity);
+    setResStatus(res_add_card);
     if (res_add_card === 201) {
       setModalOpen(false);
-      // If response status code is 201, show success message
-      alert("Add to cart success!");
-    } else {
-      // If response status code is not 201, show error message
-      alert("Failed to add to cart!");
+    } else if (res_add_card === 400) {
+      setMessage("The product is already in the shopping cart");
     }
   };
+
   return (
     <>
       <div className="card-wrapper">
@@ -115,6 +116,14 @@ export default function ProductDetail(props) {
 
               {user && user.role === "USER" ? (
                 <div className="purchase-info">
+                  {message && (
+                    <Message
+                      size={"small"}
+                      color={resStatus === 201 ? "green" : "red"}
+                    >
+                      {message}
+                    </Message>
+                  )}
                   {product.inStock ? (
                     <>
                       <input
@@ -150,8 +159,7 @@ export default function ProductDetail(props) {
                     color="red"
                     size="large"
                     onClick={() => {
-                      deleteProduct(product.id);
-                      alert("delete product successfully!");
+                      setDeleteModalOpen(true);
                     }}
                   >
                     Delete Product

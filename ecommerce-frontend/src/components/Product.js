@@ -1,19 +1,27 @@
 import React, { useContext, useState } from "react";
-import { Card, Image, Header, Label, Button, Modal } from "semantic-ui-react";
+import {
+  Card,
+  Image,
+  Header,
+  Label,
+  Button,
+  Modal,
+  Confirm,
+} from "semantic-ui-react";
 import ProductDetail from "./ProductDetail";
 import Context from "../config/context";
+import ConfirmDelete from "./ConfirmationBox";
 
 export default function Product(props) {
   const { product } = props;
-  const discount = 0;
-  const context = useContext(Context);
-  const { user, addToCart } = context;
+  const discount = product.discount.discount;
+  const { deleteProduct } = useContext(Context);
   const [modalOpen, setModalOpen] = useState(false);
-  const [quantity, setQuantity] = useState(1);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const handleCardClick = (productId) => {
     // Open the modal and set the productId in the state
-    setModalOpen(true);
+    if (!modalOpen) setModalOpen(true);
   };
 
   const handleCloseModal = () => {
@@ -21,9 +29,6 @@ export default function Product(props) {
     setModalOpen(false);
   };
 
-  const handleQuantityChange = (event) => {
-    setQuantity(parseInt(event.target.value)); // Update quantity state with selected value
-  };
   const colorArray = [
     "red",
     "blue",
@@ -48,13 +53,6 @@ export default function Product(props) {
   const pic = product.imageUrl
     ? product.imageUrl
     : "https://media.idownloadblog.com/wp-content/uploads/2022/09/iPhone-14-and-iPhone-14-pro-wallpaper-idownloadblog-mock-up.png";
-
-  const handleAddToCart = () => {
-    // Implement logic to add product to cart with selected quantity
-    // You can use the "quantity" state value in this function
-    addToCart(product.id, quantity);
-    setModalOpen(false);
-  };
 
   return (
     <Card key={product.id} onClick={() => handleCardClick(product.id)}>
@@ -84,10 +82,25 @@ export default function Product(props) {
         <Modal.Header className="modal-header">{product.brand}</Modal.Header>
         <Modal.Content image>
           <Modal.Description className="modal-description">
-            <ProductDetail setModalOpen={setModalOpen} product={product} />
+            <ProductDetail
+              setModalOpen={setModalOpen}
+              setDeleteModalOpen={setDeleteModalOpen}
+              product={product}
+            />
           </Modal.Description>
         </Modal.Content>
       </Modal>
+      <ConfirmDelete
+        open={deleteModalOpen}
+        name={product.model}
+        onDelete={async () => {
+          await deleteProduct(product.id);
+          alert("delete product successfully!");
+          setModalOpen(false);
+          setDeleteModalOpen(false);
+        }}
+        onClose={() => setDeleteModalOpen(false)}
+      />
     </Card>
   );
 }
