@@ -9,6 +9,7 @@ import Context from "../config/context";
 export default function Navbar() {
   const context = useContext(Context);
   const { user, clearUser } = context;
+  const logoSrc = process.env.PUBLIC_URL + "/assets/coffe-delivery-logo.svg"; // Update the file path here
   const [activeItem, setActiveItem] = useState("home");
 
   const handleItemClick = (e, { name }) => setActiveItem(name);
@@ -50,11 +51,11 @@ export default function Navbar() {
   return (
     <>
       <Menu pointing secondary size="massive" color="red">
-        {/* <Menu.Item>
+        <Menu.Item>
           <NavLink to="/">
-            <Image src={logo} alt="Logo" size="mini" />
+            <Image src={logoSrc} alt="Logo" size="mini" />
           </NavLink>
-        </Menu.Item> */}
+        </Menu.Item>
         <Menu.Item
           name="home"
           active={activeItem === "home"}
