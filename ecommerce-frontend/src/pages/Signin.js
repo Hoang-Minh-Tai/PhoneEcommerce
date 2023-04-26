@@ -4,7 +4,6 @@ import { Redirect } from "react-router-dom";
 
 import { Card, Header, Button, Form, Label } from "semantic-ui-react";
 
-
 import Context from "../config/context";
 
 export default function Signin() {
@@ -26,7 +25,7 @@ export default function Signin() {
   const handleChangeShippingAddress = (e, { value }) =>
     setShippingAddress(value);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newUser = {
       username: name,
       email: email,
@@ -37,7 +36,8 @@ export default function Signin() {
       is_admin: false,
     };
 
-    addUser(newUser);
+    const response = await addUser(newUser);
+    setError(response.message);
   };
 
   const view = user ? (
@@ -46,11 +46,17 @@ export default function Signin() {
     <Card fluid>
       <Card.Content>
         <Header textAlign="center">Welcome to eCommerce!</Header>
+        {error && (
+          <Header textAlign="center" style={{ color: "red", fontSize: "14px" }}>
+            {error}
+          </Header>
+        )}
+
         <Form onSubmit={handleSubmit}>
           <Form.Input
             name="name"
             label="Name"
-            placeholder="John Doe"
+            placeholder="username"
             onChange={handleChangeName}
             value={name}
             required
@@ -59,9 +65,11 @@ export default function Signin() {
           <Form.Input
             name="email"
             label="Email"
+            type="email"
             placeholder="yourmail@mail.com"
             onChange={handleChangeEmail}
             value={email}
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
             required
           />
 
@@ -72,6 +80,7 @@ export default function Signin() {
             type="password"
             onChange={handleChangePassword}
             value={password}
+            minLength={8}
             required
           />
 
@@ -103,6 +112,8 @@ export default function Signin() {
             placeholder="123-456-7890"
             onChange={handleChangePhoneNumber}
             value={phoneNumber}
+            minLength={8}
+            pattern="^\d{0,10}$"
             required
           />
 
@@ -114,12 +125,6 @@ export default function Signin() {
             value={shippingAddress}
             required
           />
-
-          {error && (
-            <Label basic size="large" color="red" prompt>
-              {error}
-            </Label>
-          )}
 
           <Button color="teal" fluid type="submit">
             Sign in

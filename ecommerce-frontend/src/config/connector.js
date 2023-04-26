@@ -78,9 +78,8 @@ const Context = (props) => {
       });
     } catch (err) {
       if (err.response) {
-        return err.response;
-      } else {
-        throw new Error("Failed to add user");
+        console.log(err.response.data);
+        return err.response.data;
       }
     }
   };
@@ -178,24 +177,23 @@ const Context = (props) => {
     let res;
     try {
       res = await axiosClient.post(
-          "/cart/add",
-          {productId, quantity},
-          {
-            headers: {
-              Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
-            },
-          }
+        "/cart/add",
+        { productId, quantity },
+        {
+          headers: {
+            Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`,
+          },
+        }
       );
 
       dispatch({
         type: ADD_TO_CART,
         payload: res.data,
       });
-      return 201
-    }
-    catch (error) {
+      return 201;
+    } catch (error) {
       console.log(error.response.data);
-      return 400
+      return 400;
     }
   };
 
