@@ -83,6 +83,7 @@ public class OrderController {
             totalPrice += price * item.getQuantity();
             productList.add(orderProduct);
             orderProductRepository.save(orderProduct);
+            shoppingCartItemRepository.delete(item);
         }
         totalPrice = totalPrice * (100 - voucher.getDiscount()) / 100;
         order.setProducts(productList);
