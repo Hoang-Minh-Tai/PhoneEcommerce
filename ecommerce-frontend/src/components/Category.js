@@ -43,11 +43,9 @@ export default function Category(props) {
 
   return (
     <div className="category-container">
-      <Card color="teal" style={{ width: "450px", height: "auto" }}>
+      <Card color="teal">
         <Link to={`/products?category=${props.category.name}`}>
-          <div className="product-image-container">
-            <Image src={pic} className="product-image" />
-          </div>
+          <ImageResizer src={pic} width={300} height={300}></ImageResizer>
         </Link>
         <Card.Content>
           <Card.Header>{props.category.name}</Card.Header>

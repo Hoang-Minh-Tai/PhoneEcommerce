@@ -85,7 +85,7 @@ public class OrderController {
             orderProductRepository.save(orderProduct);
             shoppingCartItemRepository.delete(item);
         }
-        totalPrice = totalPrice * (100 - voucher.getDiscount()) / 100;
+        if (voucher != null) totalPrice = totalPrice * (100 - voucher.getDiscount()) / 100;
         order.setProducts(productList);
         order.setTotalPrice(totalPrice);
         orderRepository.save(order);

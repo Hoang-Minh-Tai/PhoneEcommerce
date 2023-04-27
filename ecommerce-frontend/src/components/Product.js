@@ -9,6 +9,7 @@ import {
   Confirm,
 } from "semantic-ui-react";
 import ProductDetail from "./ProductDetail";
+import ImageResizer from "react-image-resizer";
 import Context from "../config/context";
 import ConfirmDelete from "./ConfirmationBox";
 
@@ -57,9 +58,7 @@ export default function Product(props) {
   return (
     <Card key={product.id} onClick={() => handleCardClick(product.id)}>
       <div className="product-container">
-        <div className="product-image-container">
-          <Image src={pic} className="product-image" />
-        </div>
+        <ImageResizer src={pic} width={300} height={300}></ImageResizer>
       </div>
       <Label color={brandColor} size="large" attached="top left">
         {product.brand.toUpperCase()}

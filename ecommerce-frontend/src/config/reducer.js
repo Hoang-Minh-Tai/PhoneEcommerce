@@ -7,7 +7,6 @@ import {
   POST_PRODUCTS,
   POST_ORDER,
   GET_USER,
-  GET_CURRENCY,
   GET_CART,
   UPDATE_CART,
   UPDATE_CATEGORY,
@@ -26,20 +25,15 @@ import {
 export default (state, action) => {
   console.log(state, action);
   switch (action.type) {
-    case GET_CURRENCY:
-      return {
-        ...state,
-        currency: action.payload,
-      };
     case POST_USER:
       return {
         ...state,
         user: action.payload,
       };
     case POST_ORDER:
+      state.orders.push(action.payload);
       return {
         ...state,
-        orders: state.orders.push(action.payload),
       };
     case POST_CATEGORY:
       return {

@@ -184,6 +184,15 @@ export default function AddProductForm(props) {
             />
           </Form.Group>
           <Button type="submit">{product ? "Update" : "Add"}</Button>
+          <Button
+            floated="right"
+            type="button"
+            onClick={() => {
+              setModalOpen(false);
+            }}
+          >
+            Close
+          </Button>
         </Form>
       </Modal.Content>
     </Modal>

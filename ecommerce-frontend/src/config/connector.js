@@ -1,7 +1,6 @@
 import React, { useReducer } from "react";
 
 import axiosClient from "./axios";
-import currencyClient from "./apiCurrency";
 
 // context
 import userContext from "./context";
@@ -11,7 +10,6 @@ import Reducer from "./reducer";
 
 // type tags
 import {
-  GET_CURRENCY,
   GET_USER,
   GET_CATEGORIES,
   GET_PRODUCTS,
@@ -54,16 +52,6 @@ const Context = (props) => {
 
   // Dispatch to execute actions
   const [state, dispatch] = useReducer(Reducer, initialState);
-
-  // API Currency
-  const getCurrency = async () => {
-    const res = await currencyClient.get("");
-
-    dispatch({
-      type: GET_CURRENCY,
-      payload: res.data,
-    });
-  };
 
   // POST Methods
   const addUser = async (user) => {
@@ -132,6 +120,7 @@ const Context = (props) => {
         type: POST_ORDER,
         payload: res.data,
       });
+      return res.data;
     } catch (error) {
       console.log(error.response.data);
     }
@@ -478,7 +467,6 @@ const Context = (props) => {
         clearUser,
         getCategories,
         getProducts,
-        getCurrency,
         getOrders,
         updateCart,
         updateCategory,

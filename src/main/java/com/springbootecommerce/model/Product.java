@@ -16,7 +16,7 @@ public class Product {
 	@Column(name = "model")
 	private String model;
 
-	@Column(name = "description")
+	@Column(name = "description", length = 10000)
 	private String description;
 
 	@Column(name = "image_url")

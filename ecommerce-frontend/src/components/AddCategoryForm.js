@@ -41,7 +41,13 @@ export default function AddCategoryForm(props) {
     <Modal
       open={isOpen}
       trigger={
-        <Button fluid primary onClick={() => setIsOpen(true)}>
+        <Button
+          fluid
+          primary
+          onClick={() => {
+            setIsOpen(!isOpen);
+          }}
+        >
           {category ? "Update Category" : "Add new Category"}
         </Button>
       }
@@ -77,6 +83,15 @@ export default function AddCategoryForm(props) {
             required
           />
           <Button type="submit"> {category ? "Update" : "Add"}</Button>
+          <Button
+            floated="right"
+            type="button"
+            onClick={() => {
+              setIsOpen(false);
+            }}
+          >
+            Close
+          </Button>
         </Form>
       </Modal.Content>
     </Modal>
