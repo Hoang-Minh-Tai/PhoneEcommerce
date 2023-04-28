@@ -27,6 +27,16 @@ public class Seed {
                 user.setStatus(UserStatus.ACTIVE);
                 userRepository.save(user);
             }
+            User testUser = userRepository.findByUsername("user");
+            if (testUser == null) {
+                User user = new User();
+                user.setUsername("user");
+                user.setPassword(passwordEncoder.encode("password"));
+                user.setRole(Role.USER);
+                user.setEmail("example2@gmail.com");
+                user.setStatus(UserStatus.ACTIVE);
+                userRepository.save(user);
+            }
         };
     }
 

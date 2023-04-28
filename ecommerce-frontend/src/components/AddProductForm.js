@@ -22,19 +22,13 @@ export default function AddProductForm(props) {
   const [modalOpen, setModalOpen] = useState(false);
   const [model, setModel] = useState(product ? product.model : "");
   const [brand, setBrand] = useState(product ? product.brand : "");
-  const [description, setDescription] = useState(
-    product ? product.description : ""
-  );
+  const [description, setDescription] = useState(product ? product.description : "");
   const [price, setPrice] = useState(product ? product.price : 0);
   const [imageUrl, setImageUrl] = useState(product ? product.imageUrl : "");
-  const [memoryVersion, setMemoryVersion] = useState(
-    product ? product.memoryVersion : ""
-  );
+  const [memoryVersion, setMemoryVersion] = useState(product ? product.memoryVersion : "");
   const [inStock, setInStock] = useState(product ? product.inStock : true);
   const [category, setCategory] = useState(product ? product.category : "");
-  const [discount, setDiscount] = useState(
-    product ? product.discount.discount : 0
-  );
+  const [discount, setDiscount] = useState(product ? product.discount.discount : 0);
 
   const handleChange1 = (e, { value }) => setModel(value);
   const handleChange2 = (e, { value }) => setBrand(value);
@@ -58,8 +52,6 @@ export default function AddProductForm(props) {
       categoryId: parseInt(category),
       discount: parseFloat(discount),
     };
-
-    console.log("category value", category);
 
     if (product) {
       await updateProduct(product.id, newProduct);
