@@ -30,6 +30,8 @@ public class ShoppingCartController {
     private ProductRepository productRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ShoppingCartItemRepository shoppingCartItemRepository;
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getShoppingCartById(@PathVariable long id, Authentication authentication) {
@@ -54,10 +56,15 @@ public class ShoppingCartController {
         // get the authenticated user
         String username = authentication.getName();
         User user = userRepository.findByUsername(username);
-        // call the product service to find the product
+
         Optional<Product> product = productRepository.findById(addCartItemDto.getProductId());
         if (product.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart item not found.");
+        }
+
+        ShoppingCartItem existedCartItem = shoppingCartItemRepository.findByUserAndProduct(user,product.get());
+        if (existedCartItem != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Product is already in shopping cart.");
         }
 
         ShoppingCartItem item = new ShoppingCartItem();

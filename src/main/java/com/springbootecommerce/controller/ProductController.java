@@ -12,7 +12,6 @@ import com.springbootecommerce.repository.DiscountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -108,34 +107,14 @@ public class ProductController {
 
         Optional<Product> product = productRepository.findById(productId);
 
-        if (productDetails.getBrand() != null) {
-            product.get().setBrand(productDetails.getBrand());
-        }
-
-        if (productDetails.getModel() != null) {
-            product.get().setModel(productDetails.getModel());
-        }
-
-        if (productDetails.getDescription() != null) {
-            product.get().setDescription(productDetails.getDescription());
-        }
-
-        if (productDetails.getImageUrl() != null) {
-            product.get().setImageUrl(productDetails.getImageUrl());
-        }
-
-        if (productDetails.getPrice() != 0) {
-            product.get().setPrice(productDetails.getPrice());
-        }
-
-        if (productDetails.getMemoryVersion() != null) {
+        if (productDetails.getBrand() != null) product.get().setBrand(productDetails.getBrand());
+        if (productDetails.getModel() != null) product.get().setModel(productDetails.getModel());
+        if (productDetails.getDescription() != null) product.get().setDescription(productDetails.getDescription());
+        if (productDetails.getImageUrl() != null) product.get().setImageUrl(productDetails.getImageUrl());
+        if (productDetails.getPrice() != 0) product.get().setPrice(productDetails.getPrice());
+        if (productDetails.getMemoryVersion() != null)
             product.get().setMemoryVersion(productDetails.getMemoryVersion());
-        }
-
-        if (productDetails.isInStock() != false) {
-            product.get().setInStock(productDetails.isInStock());
-        }
-
+        if (productDetails.isInStock() != false) product.get().setInStock(productDetails.isInStock());
         if (productDetails.getCategoryId() != null) {
             Category category = categoryRepository.findById(productDetails.getCategoryId()).orElse(null);
             product.get().setCategory(category);
