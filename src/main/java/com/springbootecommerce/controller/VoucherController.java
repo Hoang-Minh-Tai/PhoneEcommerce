@@ -45,7 +45,7 @@ public class VoucherController {
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Voucher> updateVoucher(@PathVariable(value = "id") Long voucherId,
+    public List<Voucher> updateVoucher(@PathVariable(value = "id") Long voucherId,
                                                  @RequestBody Voucher voucherDetails) throws NotFoundException {
         Voucher voucher = voucherRepository.findById(voucherId)
                 .orElseThrow(() -> new NotFoundException("Voucher not found with id: " + voucherId));
@@ -53,7 +53,7 @@ public class VoucherController {
         voucher.setDiscount(voucherDetails.getDiscount());
         voucher.setExpirationDate(voucherDetails.getExpirationDate());
         voucherRepository.save(voucher);
-        return ResponseEntity.ok(voucher);
+        return voucherRepository.findAll();
     }
 
     @DeleteMapping("/delete/{id}")

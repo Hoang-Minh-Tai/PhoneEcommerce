@@ -4,18 +4,16 @@ import Context from "../config/context";
 
 export default function AddVoucherForm(props) {
   const context = useContext(Context);
-  const { addVoucher } = context;
+  const { addVoucher, updateVoucher } = context;
   const { voucher } = props;
 
+  const [modalOpen, setModalOpen] = useState(false);
   const [code, setCode] = useState(voucher ? voucher.code : "");
   const [discount, setDiscount] = useState(voucher ? voucher.discount : "");
   const [expirationDate, setExpirationDate] = useState(
     voucher ? voucher.expirationDate.slice(0,10) : ""
   );
 
-  useEffect(() => {
-    console.log(voucher)
-  })
 
   const handleSubmit = async () => {
     const newVoucher = {
@@ -23,11 +21,16 @@ export default function AddVoucherForm(props) {
       discount: parseFloat(discount),
       expirationDate: expirationDate,
     };
-    await addVoucher(newVoucher);
-    alert("Add voucher successfully!");
-    setCode("");
-    setDiscount("");
-    setExpirationDate("");
+
+    if (!voucher) {
+      await addVoucher(newVoucher);
+      alert("Add voucher successfully!");
+    }
+    else {
+      await updateVoucher(voucher.id, newVoucher);
+      alert("Update voucher successfully!");
+    }
+    setModalOpen(false)
   };
 
   return (
@@ -37,10 +40,12 @@ export default function AddVoucherForm(props) {
           primary
           fluid={props.size ? false : true}
           size={props.size || "large"}
+          onClick={() => setModalOpen(true)}
         >
           {voucher ? "Update" : "Add New Voucher"}
         </Button>
       }
+      open={modalOpen}
     >
       <Modal.Header>
         {" "}
