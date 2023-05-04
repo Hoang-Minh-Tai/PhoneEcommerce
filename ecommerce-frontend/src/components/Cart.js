@@ -18,6 +18,7 @@ export default function Cart(props) {
 
   const [voucherCode, setVoucherCode] = useState("");
   const [voucher, setVoucher] = useState(null);
+  const [voucherMessage, setVoucherMessage] = useState("");
 
   useEffect(() => {
     getCart();
@@ -84,6 +85,12 @@ export default function Cart(props) {
   const handleApplyVoucherCode = async () => {
     const voucher = await getOneVoucher(voucherCode);
     setVoucher(voucher);
+    if (!voucher) {
+        setVoucherMessage("Your voucher is not exist or expired!")
+    }
+    else {
+        setVoucherMessage("")
+    }
   };
 
   return (
@@ -120,6 +127,11 @@ export default function Cart(props) {
             {(totalPrice - discountAmount).toFixed(2)}
           </div>
         )}
+          {voucherMessage && (
+              <div style={{color: "red", marginTop: "10px"}}>
+                  {voucherMessage}
+              </div>
+          )}
         <br />
         <Button color="teal" onClick={handleCheckout}>
           Process Checkout

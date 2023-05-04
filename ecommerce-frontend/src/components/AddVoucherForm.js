@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Form, Modal, Button, Header } from "semantic-ui-react";
 import Context from "../config/context";
 
@@ -10,8 +10,12 @@ export default function AddVoucherForm(props) {
   const [code, setCode] = useState(voucher ? voucher.code : "");
   const [discount, setDiscount] = useState(voucher ? voucher.discount : "");
   const [expirationDate, setExpirationDate] = useState(
-    voucher ? voucher.expirationDate : ""
+    voucher ? voucher.expirationDate.slice(0,10) : ""
   );
+
+  useEffect(() => {
+    console.log(voucher)
+  })
 
   const handleSubmit = async () => {
     const newVoucher = {
@@ -68,7 +72,10 @@ export default function AddVoucherForm(props) {
             label="Expiration Date"
             placeholder="Expiration Date"
             type="date"
-            onChange={(e) => setExpirationDate(e.target.value)}
+            onChange={(e) => {
+              setExpirationDate(e.target.value)
+              console.log( "date", e.target.value)
+            }}
             value={expirationDate}
           />
           <Button type="submit"> {voucher ? "Update" : "Add"}</Button>

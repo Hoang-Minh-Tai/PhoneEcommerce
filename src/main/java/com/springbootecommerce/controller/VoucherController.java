@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -26,8 +28,10 @@ public class VoucherController {
     @GetMapping("/get/{code}")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Voucher> getVoucherByCode(@PathVariable(value = "code") String voucherCode) throws NotFoundException {
-        Voucher voucher = voucherRepository.findByCode(voucherCode)
-                ;
+        Voucher voucher = voucherRepository.findByCode(voucherCode);
+        if (voucher == null || voucher.getExpirationDate().before(new Date())) {
+            return ResponseEntity.ok(null);
+        }
         return ResponseEntity.ok(voucher);
     }
 
@@ -46,12 +50,10 @@ public class VoucherController {
         Voucher voucher = voucherRepository.findById(voucherId)
                 .orElseThrow(() -> new NotFoundException("Voucher not found with id: " + voucherId));
 
-        voucher.setCode(voucherDetails.getCode());
         voucher.setDiscount(voucherDetails.getDiscount());
         voucher.setExpirationDate(voucherDetails.getExpirationDate());
-
-        final Voucher updatedVoucher = voucherRepository.save(voucher);
-        return ResponseEntity.ok(updatedVoucher);
+        voucherRepository.save(voucher);
+        return ResponseEntity.ok(voucher);
     }
 
     @DeleteMapping("/delete/{id}")
